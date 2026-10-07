@@ -208,7 +208,7 @@ class ATSScoringEngine:
         critical_missing_count = 0
 
         for item in jd_keywords:
-            kw = item["keyword"]
+            kw = str(item["keyword"])
             is_found = match_keyword_in_text(kw, resume_norm)
             rel = item["relevance"]
 
@@ -246,7 +246,7 @@ class ATSScoringEngine:
 
         for kw_item in [k for k in jd_keywords if k["category"] in ["Technologies", "Frameworks", "Tools", "Skills"]]:
             total_skills += 1
-            kw = kw_item["keyword"]
+            kw = str(kw_item["keyword"])
             in_resume = match_keyword_in_text(kw, resume_norm)
             
             # Recruiter priority
@@ -282,7 +282,7 @@ class ATSScoringEngine:
         exp_norm = normalize_token(exp_text)
         
         # Check JD words in experience
-        jd_key_terms = [k["keyword"] for k in jd_keywords[:10]]
+        jd_key_terms = [str(k["keyword"]) for k in jd_keywords[:10]]
         terms_in_exp = sum(1 for k in jd_key_terms if match_keyword_in_text(k, exp_norm))
         exp_term_ratio = terms_in_exp / max(1, len(jd_key_terms))
         

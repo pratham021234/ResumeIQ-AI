@@ -15,5 +15,6 @@
   "venvPath": "D:/ResumeIQ AI",
   "venv": ".venv",
   "pythonVersion": "3.11",
-  "pythonPlatform": "Windows"
+  "pythonPlatform": "Windows",
+  "reportMissingTypeStubs": false
 }

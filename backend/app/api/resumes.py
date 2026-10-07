@@ -22,7 +22,8 @@ async def upload_resume(
     current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     # Validate extension
-    ext = os.path.splitext(file.filename)[1].lower()
+    filename = file.filename or "resume.pdf"
+    ext = os.path.splitext(filename)[1].lower()
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -52,7 +53,7 @@ async def upload_resume(
             detail=f"Failed to parse resume: {str(e)}"
         )
 
-    resume_title = title or os.path.splitext(file.filename)[0].replace("_", " ").title()
+    resume_title = title or os.path.splitext(filename)[0].replace("_", " ").title()
     user_id = current_user.id if current_user else None
 
     # Save to database
@@ -60,7 +61,7 @@ async def upload_resume(
         id=str(uuid.uuid4()),
         user_id=user_id,
         title=resume_title,
-        file_name=file.filename,
+        file_name=filename,
         file_path=file_path,
         file_size=len(content),
         file_type=file.content_type or ("application/pdf" if ext == ".pdf" else "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
@@ -91,8 +92,8 @@ def get_all_resumes(
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user_optional)
 ):
-    user_id = current_user.id if current_user else None
-    if user_id:
+    user_id = str(current_user.id) if current_user and current_user.id is not None else None
+    if user_id is not None:
         resumes = db.query(Resume).filter((Resume.user_id == user_id) | (Resume.user_id.is_(None))).order_by(Resume.created_at.desc()).all()
     else:
         resumes = db.query(Resume).order_by(Resume.created_at.desc()).all()
@@ -121,11 +122,11 @@ def update_resume(
         raise HTTPException(status_code=404, detail="Resume not found")
 
     if data.title:
-        resume.title = data.title
+        setattr(resume, "title", data.title)
     if data.raw_text:
-        resume.raw_text = data.raw_text
+        setattr(resume, "raw_text", data.raw_text)
     if data.parsed_sections is not None:
-        resume.parsed_sections = data.parsed_sections
+        setattr(resume, "parsed_sections", data.parsed_sections)
 
     # Count existing versions to create next version
     ver_count = db.query(ResumeVersion).filter(ResumeVersion.resume_id == resume.id).count()

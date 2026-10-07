@@ -21,10 +21,10 @@ def tailor_resume_endpoint(
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user_optional)
 ):
-    resume_text = str(data.resume_text or "")
+    resume_text = data.resume_text or ""
     if not resume_text and data.resume_id:
         r = db.query(Resume).filter(Resume.id == data.resume_id).first()
-        if r and r.raw_text:
+        if r is not None and r.raw_text is not None:
             resume_text = str(r.raw_text)
     
     if not resume_text.strip():
@@ -106,10 +106,10 @@ def create_cover_letter(
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user_optional)
 ):
-    resume_text = str(data.resume_text or "")
+    resume_text = data.resume_text or ""
     if not resume_text and data.resume_id:
         r = db.query(Resume).filter(Resume.id == data.resume_id).first()
-        if r and r.raw_text:
+        if r is not None and r.raw_text is not None:
             resume_text = str(r.raw_text)
 
     result = AIService.generate_cover_letter(
@@ -141,7 +141,7 @@ def create_cover_letter(
         content=str(cover_letter.content),
         tone=str(cover_letter.tone),
         length=str(cover_letter.length),
-        created_at=cover_letter.created_at
+        created_at=getattr(cover_letter, 'created_at', None)
     )
 
 @router.get("/cover-letters", response_model=List[CoverLetterResponse])
@@ -161,7 +161,7 @@ def list_cover_letters(
             content=str(c.content),
             tone=str(c.tone),
             length=str(c.length),
-            created_at=c.created_at
+            created_at=getattr(c, 'created_at', None)
         )
         for c in cls
     ]
