@@ -1,0 +1,12 @@
+{
+  "include": [
+    "."
+  ],
+  "extraPaths": [
+    ".",
+    "../.venv/Lib/site-packages",
+    "C:/Users/sh/AppData/Local/Programs/Python/Python311/Lib/site-packages"
+  ],
+  "pythonVersion": "3.11",
+  "pythonPlatform": "Windows"
+}
