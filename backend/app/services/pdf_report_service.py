@@ -219,3 +219,123 @@ class PDFReportService:
 
         doc.build(story)
         return output_path
+
+    @staticmethod
+    def generate_recruiter_leaderboard_pdf(
+        job_title: str,
+        company: str,
+        candidates: list,
+        output_path: str
+    ) -> str:
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        doc = SimpleDocTemplate(
+            output_path,
+            pagesize=letter,
+            rightMargin=36,
+            leftMargin=36,
+            topMargin=36,
+            bottomMargin=36
+        )
+
+        styles = getSampleStyleSheet()
+        title_style = ParagraphStyle(
+            'RecruiterReportTitle',
+            parent=styles['Heading1'],
+            fontName='Helvetica-Bold',
+            fontSize=20,
+            leading=24,
+            textColor=colors.HexColor("#0f172a")
+        )
+        subtitle_style = ParagraphStyle(
+            'RecruiterReportSubtitle',
+            parent=styles['Normal'],
+            fontName='Helvetica',
+            fontSize=10,
+            leading=14,
+            textColor=colors.HexColor("#64748b")
+        )
+        table_hdr = ParagraphStyle(
+            'RecruiterHdr',
+            parent=styles['Normal'],
+            fontName='Helvetica-Bold',
+            fontSize=9,
+            leading=12,
+            textColor=colors.HexColor("#1e293b")
+        )
+        body_style = ParagraphStyle(
+            'RecruiterBody',
+            parent=styles['Normal'],
+            fontName='Helvetica',
+            fontSize=8,
+            leading=11,
+            textColor=colors.HexColor("#334155")
+        )
+        bold_body = ParagraphStyle(
+            'RecruiterBoldBody',
+            parent=styles['Normal'],
+            fontName='Helvetica-Bold',
+            fontSize=8,
+            leading=11,
+            textColor=colors.HexColor("#0f172a")
+        )
+
+        story = []
+
+        # Header
+        story.append(Paragraph(f"<b>Candidate Screening Leaderboard</b>", title_style))
+        story.append(Spacer(1, 4))
+        story.append(Paragraph(f"Position: <b>{job_title}</b> at <b>{company}</b> • Screened Candidates: {len(candidates)}", subtitle_style))
+        story.append(Spacer(1, 12))
+        story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#e2e8f0"), spaceAfter=12))
+
+        # Leaderboard Table
+        rows = [
+            [
+                Paragraph("<b>Rank</b>", table_hdr),
+                Paragraph("<b>Candidate</b>", table_hdr),
+                Paragraph("<b>ATS Score</b>", table_hdr),
+                Paragraph("<b>Match</b>", table_hdr),
+                Paragraph("<b>Top Strengths</b>", table_hdr),
+                Paragraph("<b>Screening Concerns</b>", table_hdr)
+            ]
+        ]
+
+        for c in candidates:
+            rank_str = f"#{c.get('rank', '-')}"
+            cand_info = f"<b>{c.get('candidate_name', 'Applicant')}</b><br/><font color='#64748b'>{c.get('email', '')}</font>"
+            ats_str = f"<b>{c.get('ats_score', 0)}</b>"
+            match_str = f"<b>{c.get('match_score', 0)}</b>"
+            strengths_str = "<br/>• ".join([""] + c.get('strengths', [])[:2]) if c.get('strengths') else "Strong profile alignment"
+            concerns_str = "<br/>• ".join([""] + c.get('concerns', [])[:2]) if c.get('concerns') else "None flagged"
+
+            rows.append([
+                Paragraph(rank_str, bold_body),
+                Paragraph(cand_info, body_style),
+                Paragraph(ats_str, bold_body),
+                Paragraph(match_str, bold_body),
+                Paragraph(strengths_str, body_style),
+                Paragraph(concerns_str, body_style)
+            ])
+
+        col_widths = [0.6*inch, 2.0*inch, 0.8*inch, 0.7*inch, 1.7*inch, 1.4*inch]
+        leaderboard_table = Table(rows, colWidths=col_widths)
+        leaderboard_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f1f5f9")),
+            ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#cbd5e1")),
+            ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#e2e8f0")),
+            ('PADDING', (0,0), (-1,-1), 6),
+            ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ]))
+        story.append(leaderboard_table)
+
+        # Footer
+        story.append(Spacer(1, 18))
+        story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#e2e8f0"), spaceAfter=8))
+        story.append(Paragraph(
+            "<font color='#94a3b8' size=8>ResumeIQ AI — Recruiter Talent Intelligence & Batch Screening Engine.</font>",
+            body_style
+        ))
+
+        doc.build(story)
+        return output_path
+

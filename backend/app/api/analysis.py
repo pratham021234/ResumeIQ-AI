@@ -102,6 +102,14 @@ def run_analysis(
     current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     user_id = current_user.id if current_user else None
+    if current_user:
+        from app.services.billing_service import BillingService
+        can_analyze, reason = BillingService.check_can_analyze(current_user, db)
+        if not can_analyze:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=reason or "Monthly limit of 3 free analyses reached. Upgrade to Pro for unlimited analyses."
+            )
 
     # 1. Resolve Resume
     if req.resume_id:
@@ -274,7 +282,20 @@ def run_analysis(
     db.commit()
     db.refresh(analysis)
 
+    if user_id:
+        from app.services.billing_service import BillingService
+        from app.services.analytics_service import AnalyticsService
+        BillingService.increment_analysis_usage(str(user_id), db)
+        try:
+            prior_count = db.query(Analysis).filter(Analysis.user_id == user_id).count()
+            if prior_count <= 1:
+                AnalyticsService.track_first_analysis(str(user_id), str(analysis.id), float(analysis.overall_ats_score or 0.0), db)
+            AnalyticsService.track_analysis_created(str(user_id), str(analysis.id), float(analysis.overall_ats_score or 0.0), db)
+        except Exception as e:
+            print(f"Warning: Analytics analysis tracking failed: {e}")
+
     return build_analysis_response(analysis, db)
+
 
 @router.get("", response_model=List[AnalysisOut])
 def list_analyses(

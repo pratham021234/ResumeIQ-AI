@@ -21,6 +21,13 @@ def tailor_resume_endpoint(
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user_optional)
 ):
+    if current_user:
+        from app.services.billing_service import BillingService
+        allowed, reason = BillingService.check_feature_access(current_user, "tailor", db)
+        if not allowed:
+            raise HTTPException(status_code=403, detail=reason or "AI Resume Tailor requires a Pro Pass.")
+        BillingService.increment_ai_generation(str(current_user.id), db)
+
     resume_text = data.resume_text or ""
     if not resume_text and data.resume_id:
         r = db.query(Resume).filter(Resume.id == data.resume_id).first()
@@ -67,7 +74,17 @@ def tailor_resume_endpoint(
     ))
     db.commit()
 
+
+    if user_id:
+        from app.services.analytics_service import AnalyticsService
+        try:
+            forecast_increase = float(result.get("ats_forecast", {}).get("increase", 0.0))
+            AnalyticsService.track_tailor_used(user_id, data.job_title, data.company, forecast_increase, db)
+        except Exception as e:
+            print(f"Warning: Analytics tailor tracking failed: {e}")
+
     return ResumeTailorResponse(
+
         original_resume=result["original_resume"],
         tailored_resume=result["tailored_resume"],
         job_title=result["job_title"],
@@ -106,6 +123,13 @@ def create_cover_letter(
     db: Session = Depends(get_db),
     current_user: Optional[User] = Depends(get_current_user_optional)
 ):
+    if current_user:
+        from app.services.billing_service import BillingService
+        allowed, reason = BillingService.check_feature_access(current_user, "cover_letter", db)
+        if not allowed:
+            raise HTTPException(status_code=403, detail=reason or "Cover Letter Generator requires a Pro Pass.")
+        BillingService.increment_ai_generation(str(current_user.id), db)
+
     resume_text = data.resume_text or ""
     if not resume_text and data.resume_id:
         r = db.query(Resume).filter(Resume.id == data.resume_id).first()

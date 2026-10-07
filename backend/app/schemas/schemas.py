@@ -264,3 +264,197 @@ class ResumeTailorResponse(BaseModel):
     ats_forecast: ATSForecast
     new_resume_id: Optional[str] = None
 
+# Recruiter Schemas
+class RecruiterJobCreate(BaseModel):
+    title: str
+    company: str
+    description: str
+    skills: Optional[List[str]] = None
+    experience_level: Optional[str] = "Mid-Level" # Entry, Mid-Level, Senior, Lead, Executive
+
+class RecruiterJobOut(BaseModel):
+    id: str
+    title: str
+    company: str
+    description: str
+    skills: Optional[List[str]] = None
+    experience_level: Optional[str] = "Mid-Level"
+    status: Optional[str] = "Active"
+    candidate_count: Optional[int] = 0
+    average_ats_score: Optional[float] = 0.0
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class CandidateRankingItem(BaseModel):
+    rank: int
+    analysis_id: str
+    resume_id: str
+    candidate_name: str
+    email: str
+    phone: Optional[str] = None
+    education: Optional[str] = None
+    role: str
+    job_title: str
+    company: str
+    ats_score: float
+    match_score: float
+    skill_match: float
+    experience_match: float
+    verified_skills: List[str]
+    missing_skills: List[str]
+    strengths: List[str]
+    concerns: List[str]
+    created_at: datetime
+
+class CandidateDetailOut(BaseModel):
+    analysis_id: str
+    resume_id: str
+    candidate_name: str
+    email: str
+    phone: Optional[str] = None
+    education: Optional[str] = None
+    job_title: str
+    company: str
+    ats_score: float
+    match_score: float
+    skill_match: float
+    experience_match: float
+    raw_resume: str
+    parsed_sections: Dict[str, Any]
+    match_explanation: str
+    missing_skills: List[Dict[str, Any]]
+    verified_skills: List[Dict[str, Any]]
+    strengths: List[str]
+    concerns: List[str]
+    scores: List[Dict[str, Any]]
+    created_at: datetime
+
+# Billing & Subscription Schemas
+class PlanOut(BaseModel):
+    id: str
+    name: str
+    price_inr: int
+    billing_interval: str
+    features: List[str]
+    max_analyses: int
+    allows_tailor: bool
+    allows_cover_letter: bool
+    allows_recruiter: bool
+
+    class Config:
+        from_attributes = True
+
+class SubscriptionOut(BaseModel):
+    id: str
+    user_id: str
+    plan: str
+    provider: str
+    provider_subscription_id: Optional[str] = None
+    status: str
+    current_period_start: Optional[datetime] = None
+    current_period_end: Optional[datetime] = None
+    cancel_at_period_end: bool
+    trial_end: Optional[datetime] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class InvoiceOut(BaseModel):
+    id: str
+    invoice_number: str
+    provider: str
+    amount: float
+    currency: str
+    status: str
+    plan_name: str
+    paid_at: Optional[datetime] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class PaymentOut(BaseModel):
+    id: str
+    provider: str
+    provider_payment_id: Optional[str] = None
+    amount: float
+    currency: str
+    status: str
+    payment_method: str
+    failure_reason: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class UsageTrackerOut(BaseModel):
+    month: str
+    analyses_used: int
+    max_analyses: int # 3 for free, -1 for unlimited
+    resumes_uploaded: int
+    ai_generations_used: int
+    can_analyze: bool
+
+class BillingOverviewOut(BaseModel):
+    current_plan: str
+    subscription: Optional[SubscriptionOut] = None
+    usage: UsageTrackerOut
+    plans: List[PlanOut]
+    invoices: List[InvoiceOut]
+    payments: List[PaymentOut]
+
+class CheckoutSessionCreate(BaseModel):
+    plan_id: str # 'pro' or 'recruiter'
+    provider: str = "stripe" # 'stripe' or 'razorpay'
+
+class CheckoutSessionOut(BaseModel):
+    provider: str
+    session_id: Optional[str] = None
+    order_id: Optional[str] = None
+    client_secret: Optional[str] = None
+    public_key: Optional[str] = None
+    key_id: Optional[str] = None
+    amount: int
+    currency: str
+    plan_id: str
+    plan_name: str
+
+class PaymentVerifyRequest(BaseModel):
+    plan_id: str
+    provider: str # 'stripe' or 'razorpay'
+    payment_id: Optional[str] = None
+    payment_method: Optional[str] = "card"
+
+class SubscriptionCancelRequest(BaseModel):
+    immediate: bool = False
+
+class SimulationActionRequest(BaseModel):
+    provider: str = "stripe"
+    reason: Optional[str] = "Card declined: Insufficient funds"
+
+# Analytics Schemas
+class AnalyticsEventCreate(BaseModel):
+    event_name: str
+    category: Optional[str] = "engagement" # acquisition, activation, engagement, revenue
+    anonymous_id: Optional[str] = None
+    session_id: Optional[str] = None
+    properties: Optional[Dict[str, Any]] = None
+    url: Optional[str] = None
+    referrer: Optional[str] = None
+
+class AnalyticsEventOut(BaseModel):
+    id: str
+    event_name: str
+    category: str
+    source: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+
+

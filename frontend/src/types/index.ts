@@ -202,3 +202,240 @@ export interface ResumeTailorResponse {
   new_resume_id?: string;
 }
 
+export interface RecruiterJob {
+  id: string;
+  title: string;
+  company: string;
+  description: string;
+  skills: string[];
+  experience_level: string;
+  status: string;
+  candidate_count: number;
+  average_ats_score: number;
+  created_at: string;
+}
+
+export interface CandidateRankingItem {
+  rank: number;
+  analysis_id: string;
+  resume_id: string;
+  candidate_name: string;
+  email: string;
+  phone?: string;
+  education?: string;
+  role: string;
+  job_title: string;
+  company: string;
+  ats_score: number;
+  match_score: number;
+  skill_match: number;
+  experience_match: number;
+  verified_skills: string[];
+  missing_skills: string[];
+  strengths: string[];
+  concerns: string[];
+  created_at: string;
+}
+
+export interface CandidateDetail {
+  analysis_id: string;
+  resume_id: string;
+  candidate_name: string;
+  email: string;
+  phone?: string;
+  education?: string;
+  job_title: string;
+  company: string;
+  ats_score: number;
+  match_score: number;
+  skill_match: number;
+  experience_match: number;
+  raw_resume: string;
+  parsed_sections: Record<string, string>;
+  match_explanation: string;
+  missing_skills: string[];
+  verified_skills: string[];
+  strengths: string[];
+  concerns: string[];
+  scores: Record<string, number>;
+  created_at: string;
+}
+
+export interface RecruiterJobCreate {
+  title: string;
+  company: string;
+  description: string;
+  skills: string[];
+  experience_level: string;
+}
+
+export interface BatchScreenResponse {
+  job_id: string;
+  job_title: string;
+  company: string;
+  total_screened: number;
+  candidates: CandidateRankingItem[];
+}
+
+// Subscription Billing Types
+export interface BillingPlan {
+  id: string;
+  name: string;
+  price_inr: number;
+  billing_interval: string;
+  features: string[];
+  max_analyses: number;
+  allows_tailor: boolean;
+  allows_cover_letter: boolean;
+  allows_recruiter: boolean;
+}
+
+export interface Subscription {
+  id: string;
+  user_id: string;
+  plan: string;
+  provider: string;
+  provider_subscription_id?: string;
+  status: 'active' | 'past_due' | 'canceled' | 'trialing' | 'expired' | string;
+  current_period_start?: string;
+  current_period_end?: string;
+  cancel_at_period_end: boolean;
+  trial_end?: string;
+  created_at: string;
+}
+
+export interface Invoice {
+  id: string;
+  invoice_number: string;
+  provider: string;
+  amount: number;
+  currency: string;
+  status: 'paid' | 'open' | 'void' | 'uncollectible' | string;
+  plan_name: string;
+  paid_at?: string;
+  created_at: string;
+}
+
+export interface Payment {
+  id: string;
+  provider: string;
+  provider_payment_id?: string;
+  amount: number;
+  currency: string;
+  status: 'succeeded' | 'failed' | 'pending' | string;
+  payment_method: string;
+  failure_reason?: string;
+  created_at: string;
+}
+
+export interface UsageTracker {
+  month: string;
+  analyses_used: number;
+  max_analyses: number;
+  resumes_uploaded: number;
+  ai_generations_used: number;
+  can_analyze: boolean;
+}
+
+export interface BillingOverview {
+  current_plan: string;
+  subscription?: Subscription;
+  usage: UsageTracker;
+  plans: BillingPlan[];
+  invoices: Invoice[];
+  payments: Payment[];
+}
+
+export interface CheckoutSessionResponse {
+  provider: 'stripe' | 'razorpay';
+  session_id?: string;
+  order_id?: string;
+  client_secret?: string;
+  public_key?: string;
+  key_id?: string;
+  amount: number;
+  currency: string;
+  plan_id: string;
+  plan_name: string;
+}
+
+// Product Analytics & Admin Types
+export interface FunnelStep {
+  step: string;
+  stage: string;
+  count: number;
+  percentage: number;
+  drop_off_pct: number;
+  description: string;
+}
+
+export interface TopLandingPage {
+  path: string;
+  visitors: number;
+  pageviews: number;
+  signups: number;
+  bounce_rate: number;
+  conversion_rate: number;
+}
+
+export interface TrafficSourceItem {
+  source: string;
+  visitors: number;
+  percentage: number;
+}
+
+export interface RevenueChartPoint {
+  date: string;
+  iso_date: string;
+  revenue: number;
+  mrr: number;
+  upgrades: number;
+}
+
+export interface SignupChartPoint {
+  date: string;
+  iso_date: string;
+  visitors: number;
+  signups: number;
+  activations: number;
+}
+
+export interface EngagementChartPoint {
+  date: string;
+  analyses: number;
+  tailor_sessions: number;
+  resumes: number;
+}
+
+export interface AdminAnalyticsMetrics {
+  overview: {
+    mrr: number;
+    arr: number;
+    mrr_growth_rate_pct: number;
+    total_revenue_period: number;
+    churn_rate_pct: number;
+    churned_mrr: number;
+    total_visitors: number;
+    total_signups: number;
+    total_activations: number;
+    activation_rate_pct: number;
+    total_analyses: number;
+    total_tailor_usage: number;
+    total_resumes_uploaded: number;
+    posthog_enabled: boolean;
+    ga4_enabled: boolean;
+    privacy_compliant: boolean;
+    posthog_key_masked: string;
+    ga_measurement_id: string;
+  };
+  conversion_funnel: FunnelStep[];
+  top_landing_pages: TopLandingPage[];
+  traffic_sources: TrafficSourceItem[];
+  revenue_chart: RevenueChartPoint[];
+  signup_chart: SignupChartPoint[];
+  engagement_chart: EngagementChartPoint[];
+}
+
+
+
+

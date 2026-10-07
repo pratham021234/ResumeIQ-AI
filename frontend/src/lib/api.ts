@@ -8,10 +8,20 @@ import {
   CoverLetter,
   ResumeTailorRequest,
   ResumeTailorResponse,
+  RecruiterJob,
+  CandidateRankingItem,
+  CandidateDetail,
+  RecruiterJobCreate,
+  BatchScreenResponse,
+  BillingOverview,
+  CheckoutSessionResponse,
+  AdminAnalyticsMetrics,
 } from '@/types';
-import { DEMO_ANALYSIS, DEMO_STATS, DEMO_TAILOR_RESPONSE } from './demoData';
+import { DEMO_ANALYSIS, DEMO_STATS, DEMO_TAILOR_RESPONSE, DEMO_BILLING_OVERVIEW } from './demoData';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+
 
 class ApiClient {
   private getToken(): string | null {
@@ -304,6 +314,160 @@ class ApiClient {
   getReportPdfUrl(analysisId: string): string {
     return `${API_BASE}/reports/${analysisId}/pdf`;
   }
+
+  // --- RECRUITER PORTAL API ---
+  async recruiterLogin(data: { email: string; password: string }): Promise<{ access_token: string; user: User }> {
+    const res = await this.request<{ access_token: string; user: User }>('/recruiter/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    this.setToken(res.access_token);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('resumeiq_user', JSON.stringify(res.user));
+    }
+    return res;
+  }
+
+  async getRecruiterJobs(): Promise<RecruiterJob[]> {
+    try {
+      return await this.request<RecruiterJob[]>('/recruiter/jobs');
+    } catch {
+      return [];
+    }
+  }
+
+  async createRecruiterJob(data: RecruiterJobCreate): Promise<RecruiterJob> {
+    return await this.request<RecruiterJob>('/recruiter/jobs', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteRecruiterJob(jobId: string): Promise<{ success: boolean }> {
+    return await this.request<{ success: boolean }>(`/recruiter/jobs/${jobId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async screenBatchResumes(jobId: string, files: File[]): Promise<BatchScreenResponse> {
+    const formData = new FormData();
+    formData.append('job_id', jobId);
+    for (const file of files) {
+      formData.append('files', file);
+    }
+
+    return await this.request<BatchScreenResponse>('/recruiter/screen-batch', {
+      method: 'POST',
+      body: formData,
+    });
+  }
+
+  async getRankedCandidates(params?: {
+    job_id?: string;
+    min_score?: number;
+    max_score?: number;
+    skills?: string;
+    experience_level?: string;
+    education?: string;
+    search?: string;
+    sort_by?: string;
+  }): Promise<CandidateRankingItem[]> {
+    try {
+      const query = new URLSearchParams();
+      if (params?.job_id) query.append('job_id', params.job_id);
+      if (params?.min_score !== undefined) query.append('min_score', params.min_score.toString());
+      if (params?.max_score !== undefined) query.append('max_score', params.max_score.toString());
+      if (params?.skills) query.append('skills', params.skills);
+      if (params?.experience_level) query.append('experience_level', params.experience_level);
+      if (params?.education) query.append('education', params.education);
+      if (params?.search) query.append('search', params.search);
+      if (params?.sort_by) query.append('sort_by', params.sort_by);
+
+      const qs = query.toString();
+      return await this.request<CandidateRankingItem[]>(`/recruiter/candidates${qs ? `?${qs}` : ''}`);
+    } catch {
+      return [];
+    }
+  }
+
+  async getCandidateDetail(analysisId: string): Promise<CandidateDetail> {
+    return await this.request<CandidateDetail>(`/recruiter/candidates/${analysisId}`);
+  }
+
+  getExportCandidatesCsvUrl(jobId?: string): string {
+    return `${API_BASE}/recruiter/export/csv${jobId ? `?job_id=${jobId}` : ''}`;
+  }
+
+  getExportCandidatesPdfUrl(jobId?: string): string {
+    return `${API_BASE}/recruiter/export/pdf${jobId ? `?job_id=${jobId}` : ''}`;
+  }
+
+  // Subscription Billing
+  async getBillingOverview(): Promise<BillingOverview> {
+    try {
+      return await this.request<BillingOverview>('/billing/overview');
+    } catch {
+      return DEMO_BILLING_OVERVIEW as BillingOverview;
+    }
+  }
+
+  async createCheckoutSession(data: { plan_id: string; provider?: string }): Promise<CheckoutSessionResponse> {
+    return await this.request<CheckoutSessionResponse>('/billing/checkout', {
+      method: 'POST',
+      body: JSON.stringify({
+        plan_id: data.plan_id,
+        provider: data.provider || 'stripe',
+      }),
+    });
+  }
+
+  async verifyPayment(data: {
+    plan_id: string;
+    provider: string;
+    payment_id?: string;
+    payment_method?: string;
+  }): Promise<{ success: boolean; message: string; subscription?: any }> {
+    return await this.request('/billing/verify-payment', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async downgradeSubscription(plan_id: string = 'free'): Promise<{ success: boolean; message: string; plan: string }> {
+    return await this.request('/billing/downgrade', {
+      method: 'POST',
+      body: JSON.stringify({ plan_id }),
+    });
+  }
+
+  async cancelSubscription(immediate: boolean = false): Promise<{ success: boolean; message: string; cancel_at_period_end: boolean }> {
+    return await this.request('/billing/cancel', {
+      method: 'POST',
+      body: JSON.stringify({ immediate }),
+    });
+  }
+
+  async simulateFailedPayment(provider: string = 'stripe', reason?: string): Promise<{ success: boolean; message: string; status: string }> {
+    return await this.request('/billing/simulate/failed-payment', {
+      method: 'POST',
+      body: JSON.stringify({ provider, reason }),
+    });
+  }
+
+  async simulateTrialExpiration(): Promise<{ success: boolean; message: string; plan: string }> {
+    return await this.request('/billing/simulate/trial-expiration', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  }
+
+  // Admin Analytics & Product Telemetry
+  async getAdminAnalytics(days: number = 30): Promise<AdminAnalyticsMetrics> {
+    return await this.request<AdminAnalyticsMetrics>(`/analytics/admin/overview?days=${days}`);
+  }
 }
 
 export const api = new ApiClient();
+
+
+

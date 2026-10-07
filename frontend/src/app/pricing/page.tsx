@@ -57,24 +57,25 @@ export default function PricingPage() {
           <div className="p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Starter</h3>
-                <p className="text-xs text-zinc-500 mt-1">For candidates testing their current resume baseline.</p>
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Free Starter</h3>
+                <p className="text-xs text-zinc-500 mt-1">For job seekers testing their baseline resume ATS score.</p>
               </div>
               <div className="text-3xl font-extrabold text-zinc-900 dark:text-white">
-                $0 <span className="text-xs font-normal text-zinc-400">/ forever</span>
+                ₹0 <span className="text-xs font-normal text-zinc-400">/ forever</span>
               </div>
               <ul className="space-y-2.5 text-xs text-zinc-600 dark:text-zinc-400 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> 3 ATS Scans Per Month</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Categorized Keyword Gap List</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> 3 ATS Analyses / month</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Core ATS Compatibility Score</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Keyword & Skill Gap Analysis</li>
                 <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Standard Formatting Audit</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> 1 Saved Resume Version</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> PDF Scorecard Export</li>
               </ul>
             </div>
             <Link
               href="/analyze"
               className="w-full inline-flex justify-center items-center py-2.5 rounded-xl text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-200 transition-colors"
             >
-              Start Free
+              Get Started Free
             </Link>
           </div>
 
@@ -85,52 +86,56 @@ export default function PricingPage() {
             </span>
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Pro Pass</h3>
-                <p className="text-xs text-zinc-500 mt-1">For active applicants targeting top tech & enterprise roles.</p>
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Pro</h3>
+                <p className="text-xs text-zinc-500 mt-1">For active applicants who want to land top tech & enterprise interviews.</p>
               </div>
               <div className="text-3xl font-extrabold text-zinc-900 dark:text-white">
-                {annual ? '$15' : '$19'}{' '}
+                ₹{annual ? '239' : '299'}{' '}
                 <span className="text-xs font-normal text-zinc-400">/ month</span>
               </div>
               <ul className="space-y-2.5 text-xs text-zinc-600 dark:text-zinc-400 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> <b>Unlimited</b> ATS Scans</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> AI Bullet Improver (All Styles)</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> Tailored Cover Letter Generator</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> Downloadable PDF Audit Reports</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> Multiple Resume Version Library</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> <b>Unlimited</b> ATS Analyses</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> <b>AI Resume Tailor</b> (Side-by-Side)</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> <b>Tailored Cover Letters</b> Generator</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> AI Bullet Impact Polisher (STAR)</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-indigo-500 shrink-0" /> Priority Processing & Reports</li>
               </ul>
             </div>
             <Link
-              href="/signup"
-              className="w-full inline-flex justify-center items-center py-3 rounded-xl text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-md"
+              href="/billing?plan=pro"
+              className="w-full inline-flex justify-center items-center py-3 rounded-xl text-xs font-semibold bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-md gap-1.5"
             >
-              Upgrade to Pro
+              <span>Upgrade to Pro</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          {/* Career Booster */}
+          {/* Recruiter Tier */}
           <div className="p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xs flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Career Booster</h3>
-                <p className="text-xs text-zinc-500 mt-1">For staff/principal engineers, executives, & coaches.</p>
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Recruiter</h3>
+                <p className="text-xs text-zinc-500 mt-1">For hiring managers, talent teams, and agency headhunters.</p>
               </div>
               <div className="text-3xl font-extrabold text-zinc-900 dark:text-white">
-                {annual ? '$31' : '$39'}{' '}
+                ₹{annual ? '1599' : '1999'}{' '}
                 <span className="text-xs font-normal text-zinc-400">/ month</span>
               </div>
               <ul className="space-y-2.5 text-xs text-zinc-600 dark:text-zinc-400 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Everything in Pro</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Recruiter Priority Benchmarking</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Custom Gemini API Key Option</li>
-                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Priority Cloud Analysis Speed</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Everything in Pro included</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> <b>Bulk Resume Screening</b> (1-100 files)</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> <b>Candidate Ranking Engine</b></li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Dedicated Recruiter Dashboard</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Multi-Job Pipeline Management</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /> Bulk CSV & PDF Pipeline Export</li>
               </ul>
             </div>
             <Link
-              href="/signup"
-              className="w-full inline-flex justify-center items-center py-2.5 rounded-xl text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 hover:bg-zinc-200 transition-colors"
+              href="/billing?plan=recruiter"
+              className="w-full inline-flex justify-center items-center py-2.5 rounded-xl text-xs font-semibold bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors gap-1.5"
             >
-              Select Booster
+              <span>Upgrade to Recruiter</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>
@@ -145,21 +150,24 @@ export default function PricingPage() {
               <thead>
                 <tr className="border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/40 text-zinc-500 uppercase tracking-wider text-[10px]">
                   <th className="py-3.5 px-4 font-bold">Feature</th>
-                  <th className="py-3.5 px-4 font-bold">Starter ($0)</th>
-                  <th className="py-3.5 px-4 font-bold">Pro ($19)</th>
-                  <th className="py-3.5 px-4 font-bold">Booster ($39)</th>
+                  <th className="py-3.5 px-4 font-bold">Free Starter (₹0)</th>
+                  <th className="py-3.5 px-4 font-bold">Pro (₹299/mo)</th>
+                  <th className="py-3.5 px-4 font-bold">Recruiter (₹1999/mo)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                 {[
-                  ['ATS Compatibility Scoring', 'Yes', 'Yes', 'Yes'],
-                  ['Deterministic Explainable Formula', 'Yes', 'Yes', 'Yes'],
-                  ['Monthly Resume Scans', '3', 'Unlimited', 'Unlimited'],
-                  ['AI Bullet Point Improver', '5 / month', 'Unlimited', 'Unlimited'],
-                  ['Cover Letter Generator', 'Preview only', 'Unlimited', 'Unlimited'],
-                  ['Downloadable PDF Reports', '1 / month', 'Unlimited', 'Unlimited'],
-                  ['Resume Library Versions', '1', '10', 'Unlimited'],
-                  ['Recruiter Benchmarks', 'No', 'No', 'Yes'],
+                  ['Monthly Resume Analyses', '3 / month', 'Unlimited', 'Unlimited'],
+                  ['Deterministic ATS Scoring Engine', 'Yes', 'Yes', 'Yes'],
+                  ['Keyword & Skill Gap Highlighting', 'Yes', 'Yes', 'Yes'],
+                  ['AI Resume Tailor (Side-by-Side)', 'No (Locked)', 'Yes (Unlimited)', 'Yes (Unlimited)'],
+                  ['AI Cover Letter Generator', 'No (Locked)', 'Yes (Unlimited)', 'Yes (Unlimited)'],
+                  ['Bullet Point Impact Polisher', 'Limited', 'Unlimited', 'Unlimited'],
+                  ['Recruiter Mode & Dashboard', 'No', 'No', 'Yes (Full Access)'],
+                  ['Bulk Resume Upload & Screening', 'No', 'No', 'Up to 100 files'],
+                  ['Candidate Ranking Matrix', 'No', 'No', 'Yes'],
+                  ['Candidate Export (CSV/PDF)', 'No', 'No', 'Yes'],
+                  ['Payment Providers Supported', 'N/A', 'Stripe & Razorpay', 'Stripe & Razorpay'],
                 ].map(([feat, f1, f2, f3], i) => (
                   <tr key={i} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                     <td className="py-3 px-4 font-semibold text-zinc-900 dark:text-zinc-100">{feat}</td>
@@ -178,3 +186,4 @@ export default function PricingPage() {
     </div>
   );
 }
+

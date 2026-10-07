@@ -16,6 +16,8 @@ from app.api.ai import router as ai_router
 from app.api.reports import router as reports_router
 from app.api.dashboard import router as dashboard_router
 from app.api.recruiter import router as recruiter_router
+from app.api.billing import router as billing_router
+from app.api.admin_analytics import router as analytics_router
 
 # Initialize tables
 Base.metadata.create_all(bind=engine)
@@ -55,6 +57,9 @@ app.include_router(ai_router, prefix="/api")
 app.include_router(reports_router, prefix="/api")
 app.include_router(dashboard_router, prefix="/api")
 app.include_router(recruiter_router, prefix="/api")
+app.include_router(billing_router, prefix="/api")
+app.include_router(analytics_router, prefix="/api")
+
 
 @app.get("/")
 def root():

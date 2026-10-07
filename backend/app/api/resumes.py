@@ -85,7 +85,17 @@ async def upload_resume(
     db.add(version)
     db.commit()
 
+    if user_id:
+        from app.services.billing_service import BillingService
+        from app.services.analytics_service import AnalyticsService
+        BillingService.increment_resume_upload(user_id, db)
+        try:
+            AnalyticsService.track_resume_upload(user_id, str(resume.id), str(resume.file_type), int(resume.file_size or 0), db)
+        except Exception as e:
+            print(f"Warning: Analytics resume upload tracking failed: {e}")
+
     return ResumeOut.model_validate(resume)
+
 
 @router.get("", response_model=List[ResumeOut])
 def get_all_resumes(

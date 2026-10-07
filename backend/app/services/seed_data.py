@@ -5,12 +5,13 @@ from sqlalchemy.orm import Session
 from app.models.models import (
     User, Resume, ResumeVersion, JobDescription, Analysis,
     AnalysisScore, KeywordMatch, SkillGap, ResumeIssue, Recommendation,
-    CoverLetter, Subscription, Report
+    CoverLetter, Subscription, Report, Invoice, Payment, Plan, UsageTracker
 )
 from app.core.security import get_password_hash
 from app.scoring.ats_scoring import ATSScoringEngine
 from app.parsers.resume_parser import ResumeParser
 from app.services.pdf_report_service import PDFReportService
+from app.services.billing_service import BillingService
 
 SAMPLE_RESUME_TEXT = """ALEX RIVERA
 San Francisco, CA • alex.rivera.dev@gmail.com • (415) 890-2341 • linkedin.com/in/alexrivera-dev • github.com/alexrivera
@@ -75,9 +76,244 @@ Requirements:
 """
 
 def seed_database(db: Session):
+    # Ensure standard plans exist
+    BillingService.seed_plans(db)
+
     # Check if demo user already exists
     demo_user = db.query(User).filter(User.email == "demo@resumeiq.ai").first()
     if demo_user:
+        # Check if recruiter is seeded
+        recruiter_user = db.query(User).filter(User.email == "recruiter@resumeiq.ai").first()
+        if not recruiter_user:
+            recruiter_user = User(
+                id=str(uuid.uuid4()),
+                email="recruiter@resumeiq.ai",
+                hashed_password=get_password_hash("password123"),
+                full_name="Elena Rostova (Recruiter)",
+                plan="recruiter",
+                is_recruiter=True
+            )
+            db.add(recruiter_user)
+            db.commit()
+
+        # Ensure demo user has active Pro subscription & invoice
+        demo_sub = db.query(Subscription).filter(Subscription.user_id == demo_user.id).first()
+        if not demo_sub:
+            demo_sub = Subscription(
+                id=str(uuid.uuid4()),
+                user_id=str(demo_user.id),
+                plan="pro",
+                provider="stripe",
+                provider_subscription_id="sub_stripe_demo_alex",
+                status="active",
+                current_period_start=datetime.now(timezone.utc) - timedelta(days=5),
+                current_period_end=datetime.now(timezone.utc) + timedelta(days=25),
+                cancel_at_period_end=False,
+                created_at=datetime.now(timezone.utc) - timedelta(days=5)
+            )
+            db.add(demo_sub)
+            db.commit()
+
+        demo_inv = db.query(Invoice).filter(Invoice.user_id == demo_user.id).first()
+        if not demo_inv and demo_sub:
+            demo_inv = Invoice(
+                id=str(uuid.uuid4()),
+                user_id=str(demo_user.id),
+                subscription_id=str(demo_sub.id),
+                invoice_number="INV-202610-PRO-001",
+                provider="stripe",
+                provider_invoice_id="in_stripe_demo_alex",
+                amount=299.0,
+                currency="INR",
+                status="paid",
+                plan_name="Pro",
+                paid_at=datetime.now(timezone.utc) - timedelta(days=5),
+                created_at=datetime.now(timezone.utc) - timedelta(days=5)
+            )
+            db.add(demo_inv)
+            demo_pay = Payment(
+                id=str(uuid.uuid4()),
+                user_id=str(demo_user.id),
+                subscription_id=str(demo_sub.id),
+                invoice_id=str(demo_inv.id),
+                provider="stripe",
+                provider_payment_id="pay_stripe_demo_alex",
+                amount=299.0,
+                currency="INR",
+                status="succeeded",
+                payment_method="card",
+                created_at=datetime.now(timezone.utc) - timedelta(days=5)
+            )
+            db.add(demo_pay)
+            db.commit()
+
+        # Ensure recruiter user has active Recruiter subscription & invoice
+        if recruiter_user:
+            rec_sub = db.query(Subscription).filter(Subscription.user_id == recruiter_user.id).first()
+            if not rec_sub:
+                rec_sub = Subscription(
+                    id=str(uuid.uuid4()),
+                    user_id=str(recruiter_user.id),
+                    plan="recruiter",
+                    provider="razorpay",
+                    provider_subscription_id="sub_rzp_demo_elena",
+                    status="active",
+                    current_period_start=datetime.now(timezone.utc) - timedelta(days=10),
+                    current_period_end=datetime.now(timezone.utc) + timedelta(days=20),
+                    cancel_at_period_end=False,
+                    created_at=datetime.now(timezone.utc) - timedelta(days=10)
+                )
+                db.add(rec_sub)
+                db.commit()
+
+            rec_inv = db.query(Invoice).filter(Invoice.user_id == recruiter_user.id).first()
+            if not rec_inv and rec_sub:
+                rec_inv = Invoice(
+                    id=str(uuid.uuid4()),
+                    user_id=str(recruiter_user.id),
+                    subscription_id=str(rec_sub.id),
+                    invoice_number="INV-202610-REC-001",
+                    provider="razorpay",
+                    provider_invoice_id="inv_rzp_demo_elena",
+                    amount=1999.0,
+                    currency="INR",
+                    status="paid",
+                    plan_name="Recruiter",
+                    paid_at=datetime.now(timezone.utc) - timedelta(days=10),
+                    created_at=datetime.now(timezone.utc) - timedelta(days=10)
+                )
+                db.add(rec_inv)
+                rec_pay = Payment(
+                    id=str(uuid.uuid4()),
+                    user_id=str(recruiter_user.id),
+                    subscription_id=str(rec_sub.id),
+                    invoice_id=str(rec_inv.id),
+                    provider="razorpay",
+                    provider_payment_id="pay_rzp_demo_elena",
+                    amount=1999.0,
+                    currency="INR",
+                    status="succeeded",
+                    payment_method="upi",
+                    created_at=datetime.now(timezone.utc) - timedelta(days=10)
+                )
+                db.add(rec_pay)
+                db.commit()
+
+        # Update primary JDs with skills if empty
+        jds = db.query(JobDescription).all()
+        for j in jds:
+            if not getattr(j, "skills", None):
+                setattr(j, "skills", ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "AWS", "Kubernetes"])
+                setattr(j, "experience_level", getattr(j, "experience_level", None) or "Senior")
+                setattr(j, "status", getattr(j, "status", None) or "Active")
+        db.commit()
+
+        # Check if Jordan Lee is seeded
+        res2_check = db.query(Resume).filter(Resume.file_name == "Jordan_Lee_Senior_Backend.pdf").first()
+        target_jd = jds[0] if jds else None
+        if not res2_check and target_jd:
+            res2 = Resume(
+                id=str(uuid.uuid4()),
+                user_id=demo_user.id,
+                title="Jordan Lee Resume",
+                file_name="Jordan_Lee_Senior_Backend.pdf",
+                file_path="uploads/demo_jordan.pdf",
+                file_size=845120,
+                file_type="application/pdf",
+                raw_text="JORDAN LEE\nSeattle, WA • jordan.lee@techmail.io • (206) 555-0192\n\nSUMMARY\nBackend Engineer with 5 years building scalable web APIs with Go, Python, PostgreSQL, and Docker.\n\nSKILLS\nGo, Python, PostgreSQL, Docker, Redis, REST APIs, Git, Linux\n\nEXPERIENCE\nBackend Developer | NovaCloud (2021 - Present)\n- Developed distributed backend services processing 2M daily API events.\n- Improved PostgreSQL query response times by 35% with index tuning.\n- Containerized microservices using Docker.",
+                parsed_sections={
+                    "summary": "Backend Engineer with 5 years building scalable web APIs with Go, Python, PostgreSQL, and Docker.",
+                    "skills": "Go, Python, PostgreSQL, Docker, Redis, REST APIs, Git, Linux",
+                    "experience": "Backend Developer | NovaCloud (2021 - Present)\n- Developed distributed backend services processing 2M daily API events.\n- Improved PostgreSQL query response times by 35% with index tuning.",
+                    "education": "B.S. in Computer Science — University of Washington (2020)"
+                },
+                formatting_meta={
+                    "candidate_name": "Jordan Lee",
+                    "candidate_email": "jordan.lee@techmail.io",
+                    "candidate_phone": "(206) 555-0192",
+                    "education": "B.S. in Computer Science"
+                }
+            )
+            db.add(res2)
+            db.commit()
+
+            a_res2 = Analysis(
+                id=str(uuid.uuid4()),
+                user_id=demo_user.id,
+                resume_id=res2.id,
+                job_id=target_jd.id,
+                overall_ats_score=86.0,
+                job_match_score=84.5,
+                keyword_match_score=82.0,
+                quality_score=88.0,
+                summary="Solid backend background with Go, Python, and PostgreSQL. Demonstrates good concurrency knowledge.",
+                screening_summary={
+                    "strengths": [
+                        "Strong Go and Python backend fundamentals",
+                        "Demonstrated database query optimization (35% speedup)",
+                        "Solid Docker containerization experience"
+                    ],
+                    "concerns": [
+                        "Missing Kubernetes production orchestration",
+                        "Limited cloud provider depth (AWS/GCP)"
+                    ],
+                    "recommendation": "Strong Candidate"
+                },
+                created_at=datetime.now(timezone.utc) - timedelta(hours=6)
+            )
+            db.add(a_res2)
+
+            res3 = Resume(
+                id=str(uuid.uuid4()),
+                user_id=demo_user.id,
+                title="Sarah Chen Resume",
+                file_name="Sarah_Chen_FullStack.pdf",
+                file_path="uploads/demo_sarah.pdf",
+                file_size=912400,
+                file_type="application/pdf",
+                raw_text="SARAH CHEN\nNew York, NY • sarah.chen@innovate.org • (917) 555-4412\n\nSUMMARY\nFull Stack & Backend Developer with 4 years experience with Python, Django, REST APIs, and MySQL.\n\nSKILLS\nPython, Django, Flask, JavaScript, MySQL, Redis, Git\n\nEXPERIENCE\nSoftware Engineer | FinEdge (2022 - Present)\n- Maintained customer billing APIs handling 50k transactions weekly.\n- Built internal admin dashboards with Django.",
+                parsed_sections={
+                    "summary": "Full Stack & Backend Developer with 4 years experience with Python, Django, REST APIs, and MySQL.",
+                    "skills": "Python, Django, Flask, JavaScript, MySQL, Redis, Git",
+                    "experience": "Software Engineer | FinEdge (2022 - Present)\n- Maintained customer billing APIs handling 50k transactions weekly.",
+                    "education": "M.S. in Data Science — Columbia University (2021)"
+                },
+                formatting_meta={
+                    "candidate_name": "Sarah Chen",
+                    "candidate_email": "sarah.chen@innovate.org",
+                    "candidate_phone": "(917) 555-4412",
+                    "education": "M.S. in Data Science"
+                }
+            )
+            db.add(res3)
+            db.commit()
+
+            a_res3 = Analysis(
+                id=str(uuid.uuid4()),
+                user_id=demo_user.id,
+                resume_id=res3.id,
+                job_id=target_jd.id,
+                overall_ats_score=78.5,
+                job_match_score=74.0,
+                keyword_match_score=72.0,
+                quality_score=80.0,
+                summary="Good Python web experience with Django. Lacks high-concurrency microservices and Docker/Kubernetes.",
+                screening_summary={
+                    "strengths": [
+                        "Strong academic credentials (M.S. in Data Science)",
+                        "Solid Python and relational database foundations"
+                    ],
+                    "concerns": [
+                        "Missing Docker and Kubernetes",
+                        "Limited cloud architecture and microservices exposure"
+                    ],
+                    "recommendation": "Review Recommended"
+                },
+                created_at=datetime.now(timezone.utc) - timedelta(hours=18)
+            )
+            db.add(a_res3)
+            db.commit()
+
         return demo_user
 
     # Create demo user
@@ -159,9 +395,9 @@ def seed_database(db: Session):
     # Run ATS scoring
     analysis_res = ATSScoringEngine.calculate_full_analysis(
         parsed_resume,
-        jd_title=jd.title,
-        jd_company=jd.company,
-        jd_text=jd.raw_text
+        jd_title=str(jd.title),
+        jd_company=str(jd.company),
+        jd_text=str(jd.raw_text)
     )
 
     # Create Analysis record
@@ -309,5 +545,142 @@ def seed_database(db: Session):
     )
     db.add(analysis2)
 
+    # Set screening summary for primary analysis
+    setattr(analysis, "screening_summary", {
+        "strengths": [
+            "Strong Python & FastAPI microservices architecture",
+            "Quantified business metrics: sub-45ms p99 latency & $25M+ transaction processing",
+            "Hands-on production Kubernetes and AWS cloud infrastructure"
+        ],
+        "concerns": [
+            "Missing Docker container orchestration mentions in early roles",
+            "Limited Kafka event streaming exposure compared to RabbitMQ"
+        ],
+        "recommendation": "Strong Candidate"
+    })
+
+    # Seed Recruiter Account & Additional Candidates
+    recruiter_user = db.query(User).filter(User.email == "recruiter@resumeiq.ai").first()
+    if not recruiter_user:
+        recruiter_user = User(
+            id=str(uuid.uuid4()),
+            email="recruiter@resumeiq.ai",
+            hashed_password=get_password_hash("password123"),
+            full_name="Elena Rostova (Recruiter)",
+            plan="enterprise",
+            is_recruiter=True
+        )
+        db.add(recruiter_user)
+        db.commit()
+        db.refresh(recruiter_user)
+
+    # Update primary JD with skills and experience level
+    setattr(jd, "skills", ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "AWS", "Kubernetes"])
+    setattr(jd, "experience_level", "Senior")
+    setattr(jd, "status", "Active")
+
+    # Candidate 2: Jordan Lee
+    res2 = Resume(
+        id=str(uuid.uuid4()),
+        user_id=demo_user.id,
+        title="Jordan Lee Resume",
+        file_name="Jordan_Lee_Senior_Backend.pdf",
+        file_path="uploads/demo_jordan.pdf",
+        file_size=845120,
+        file_type="application/pdf",
+        raw_text="JORDAN LEE\nSeattle, WA • jordan.lee@techmail.io • (206) 555-0192\n\nSUMMARY\nBackend Engineer with 5 years building scalable web APIs with Go, Python, PostgreSQL, and Docker.\n\nSKILLS\nGo, Python, PostgreSQL, Docker, Redis, REST APIs, Git, Linux\n\nEXPERIENCE\nBackend Developer | NovaCloud (2021 - Present)\n- Developed distributed backend services processing 2M daily API events.\n- Improved PostgreSQL query response times by 35% with index tuning.\n- Containerized microservices using Docker.",
+        parsed_sections={
+            "summary": "Backend Engineer with 5 years building scalable web APIs with Go, Python, PostgreSQL, and Docker.",
+            "skills": "Go, Python, PostgreSQL, Docker, Redis, REST APIs, Git, Linux",
+            "experience": "Backend Developer | NovaCloud (2021 - Present)\n- Developed distributed backend services processing 2M daily API events.\n- Improved PostgreSQL query response times by 35% with index tuning.",
+            "education": "B.S. in Computer Science — University of Washington (2020)"
+        },
+        formatting_meta={
+            "candidate_name": "Jordan Lee",
+            "candidate_email": "jordan.lee@techmail.io",
+            "candidate_phone": "(206) 555-0192",
+            "education": "B.S. in Computer Science"
+        }
+    )
+    db.add(res2)
+    db.commit()
+
+    a_res2 = Analysis(
+        id=str(uuid.uuid4()),
+        user_id=demo_user.id,
+        resume_id=res2.id,
+        job_id=jd.id,
+        overall_ats_score=81.0,
+        job_match_score=79.5,
+        keyword_match_score=80.0,
+        quality_score=84.0,
+        summary="Solid backend background with Go, Python, and PostgreSQL. Demonstrates good concurrency knowledge.",
+        screening_summary={
+            "strengths": [
+                "Strong Go and Python backend fundamentals",
+                "Demonstrated database query optimization (35% speedup)",
+                "Solid Docker containerization experience"
+            ],
+            "concerns": [
+                "Missing Kubernetes production orchestration",
+                "Limited cloud provider depth (AWS/GCP)"
+            ],
+            "recommendation": "Strong Candidate"
+        },
+        created_at=datetime.now(timezone.utc) - timedelta(hours=6)
+    )
+    db.add(a_res2)
+
+    # Candidate 3: Sarah Chen
+    res3 = Resume(
+        id=str(uuid.uuid4()),
+        user_id=demo_user.id,
+        title="Sarah Chen Resume",
+        file_name="Sarah_Chen_FullStack.pdf",
+        file_size=912400,
+        file_type="application/pdf",
+        raw_text="SARAH CHEN\nNew York, NY • sarah.chen@innovate.org • (917) 555-4412\n\nSUMMARY\nFull Stack & Backend Developer with 4 years experience with Python, Django, REST APIs, and MySQL.\n\nSKILLS\nPython, Django, Flask, JavaScript, MySQL, Redis, Git\n\nEXPERIENCE\nSoftware Engineer | FinEdge (2022 - Present)\n- Maintained customer billing APIs handling 50k transactions weekly.\n- Built internal admin dashboards with Django.",
+        parsed_sections={
+            "summary": "Full Stack & Backend Developer with 4 years experience with Python, Django, REST APIs, and MySQL.",
+            "skills": "Python, Django, Flask, JavaScript, MySQL, Redis, Git",
+            "experience": "Software Engineer | FinEdge (2022 - Present)\n- Maintained customer billing APIs handling 50k transactions weekly.",
+            "education": "M.S. in Data Science — Columbia University (2021)"
+        },
+        formatting_meta={
+            "candidate_name": "Sarah Chen",
+            "candidate_email": "sarah.chen@innovate.org",
+            "candidate_phone": "(917) 555-4412",
+            "education": "M.S. in Data Science"
+        }
+    )
+    db.add(res3)
+    db.commit()
+
+    a_res3 = Analysis(
+        id=str(uuid.uuid4()),
+        user_id=demo_user.id,
+        resume_id=res3.id,
+        job_id=jd.id,
+        overall_ats_score=74.5,
+        job_match_score=71.0,
+        keyword_match_score=70.0,
+        quality_score=78.0,
+        summary="Good Python web experience with Django. Lacks high-concurrency microservices and Docker/Kubernetes.",
+        screening_summary={
+            "strengths": [
+                "Strong academic credentials (M.S. in Data Science)",
+                "Solid Python and relational database foundations"
+            ],
+            "concerns": [
+                "Missing Docker and Kubernetes",
+                "Limited cloud architecture and microservices exposure"
+            ],
+            "recommendation": "Review Recommended"
+        },
+        created_at=datetime.now(timezone.utc) - timedelta(hours=18)
+    )
+    db.add(a_res3)
+
     db.commit()
     return demo_user
+

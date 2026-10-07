@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   ChevronRight,
   LogOut,
+  BarChart3,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 
@@ -28,9 +29,11 @@ const navigationItems = [
   { name: 'Bullet Improver', href: '/editor', icon: PenTool },
   { name: 'Cover Letters', href: '/cover-letter', icon: Mail },
   { name: 'Audit Reports', href: '/reports', icon: FileCheck2 },
-  { name: 'Billing & Plans', href: '/pricing', icon: CreditCard },
+  { name: 'Billing & Plans', href: '/billing', icon: CreditCard },
+  { name: 'Admin Analytics', href: '/admin/analytics', icon: BarChart3, badge: 'ADMIN' },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
+
 
 export const Sidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> = ({
   isOpen = false,

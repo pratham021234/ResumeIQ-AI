@@ -1,4 +1,11 @@
-import { Analysis, DashboardStats, ResumeTailorResponse } from '@/types';
+import {
+  Analysis,
+  DashboardStats,
+  ResumeTailorResponse,
+  RecruiterJob,
+  CandidateRankingItem,
+  CandidateDetail
+} from '@/types';
 
 export const DEMO_ANALYSIS: Analysis = {
   id: 'demo-analysis-alex-stripe',
@@ -520,4 +527,334 @@ B.S. in Computer Science | University of California, Berkeley (2020)`,
   },
   new_resume_id: 'tailored-stripe-demo',
 };
+
+export const DEMO_RECRUITER_JOBS: RecruiterJob[] = [
+  {
+    id: 'job-stripe-backend',
+    title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    description: 'Lead high-throughput payment processing pipelines, distributed ledger services, and resilient API architecture using Python, FastAPI, and PostgreSQL.',
+    skills: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Docker', 'AWS', 'Kubernetes'],
+    experience_level: 'Senior',
+    status: 'Active',
+    candidate_count: 3,
+    average_ats_score: 82.0,
+    created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
+  },
+  {
+    id: 'job-vercel-platform',
+    title: 'Staff Platform Engineer',
+    company: 'Vercel',
+    description: 'Scale developer infrastructure, global edge edge compute, Next.js build pipelines, and multi-region Kubernetes clusters.',
+    skills: ['Go', 'TypeScript', 'Kubernetes', 'Docker', 'AWS', 'Next.js'],
+    experience_level: 'Lead',
+    status: 'Active',
+    candidate_count: 2,
+    average_ats_score: 79.5,
+    created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
+  },
+  {
+    id: 'job-anthropic-ai',
+    title: 'Distributed Systems Engineer',
+    company: 'Anthropic',
+    description: 'Architect low-latency model inference services and high-performance asynchronous data ingestion clusters with PyTorch and Ray.',
+    skills: ['Python', 'C++', 'Ray', 'Kubernetes', 'Distributed Systems'],
+    experience_level: 'Senior',
+    status: 'Active',
+    candidate_count: 1,
+    average_ats_score: 85.0,
+    created_at: new Date(Date.now() - 86400000 * 12).toISOString(),
+  },
+];
+
+export const DEMO_RANKED_CANDIDATES: CandidateRankingItem[] = [
+  {
+    rank: 1,
+    analysis_id: 'analysis-alex-stripe',
+    resume_id: 'resume-alex',
+    candidate_name: 'Alex Rivera',
+    email: 'alex.rivera.dev@gmail.com',
+    phone: '(415) 890-2341',
+    education: 'B.S. in Computer Science — UC Berkeley',
+    role: 'Senior Backend Engineer',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    ats_score: 87.0,
+    match_score: 84.5,
+    skill_match: 86.0,
+    experience_match: 88.0,
+    verified_skills: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'AWS', 'Kubernetes', 'REST APIs', 'System Design'],
+    missing_skills: ['Docker (orchestration in early roles)', 'Kafka Event Streaming'],
+    strengths: [
+      'Strong Python and FastAPI microservices architecture with sub-45ms latency benchmarks',
+      'Quantified business metrics demonstrated ($25M+ monthly transaction processing)',
+      'Production Kubernetes and AWS container infrastructure experience',
+      'Excellent ATS compatibility (87/100) and clean parse density',
+    ],
+    concerns: [
+      'Missing Docker containerization mentions in early foundation roles',
+      'Limited Apache Kafka event streaming exposure compared to RabbitMQ',
+    ],
+    created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
+  },
+  {
+    rank: 2,
+    analysis_id: 'analysis-jordan-backend',
+    resume_id: 'resume-jordan',
+    candidate_name: 'Jordan Lee',
+    email: 'jordan.lee@techmail.io',
+    phone: '(206) 555-0192',
+    education: 'B.S. in Computer Science — Univ of Washington',
+    role: 'Backend Engineer',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    ats_score: 82.5,
+    match_score: 79.0,
+    skill_match: 80.0,
+    experience_match: 82.5,
+    verified_skills: ['Go', 'Python', 'PostgreSQL', 'Docker', 'Redis', 'REST APIs', 'Git'],
+    missing_skills: ['Kubernetes', 'AWS Lambda', 'FastAPI'],
+    strengths: [
+      'Solid Go and Python backend fundamentals with distributed system experience',
+      'Proven database query optimization with 35% response time improvement',
+      'Strong Docker containerization and CI/CD pipelines',
+    ],
+    concerns: [
+      'Missing Kubernetes production orchestration depth',
+      'Limited multi-region AWS cloud architecting',
+    ],
+    created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
+  {
+    rank: 3,
+    analysis_id: 'analysis-sarah-fullstack',
+    resume_id: 'resume-sarah',
+    candidate_name: 'Sarah Chen',
+    email: 'sarah.chen@innovate.org',
+    phone: '(917) 555-4412',
+    education: 'M.S. in Data Science — Columbia University',
+    role: 'Full Stack & Backend Engineer',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    ats_score: 76.5,
+    match_score: 72.0,
+    skill_match: 73.0,
+    experience_match: 76.5,
+    verified_skills: ['Python', 'Django', 'Flask', 'MySQL', 'Redis', 'JavaScript'],
+    missing_skills: ['FastAPI', 'Kubernetes', 'AWS', 'Docker'],
+    strengths: [
+      'Strong academic credentials (M.S. in Data Science from Columbia)',
+      'Solid Python web development and relational database management',
+      'Hands-on experience maintaining billing APIs with 50k weekly volume',
+    ],
+    concerns: [
+      'Missing Docker and Kubernetes container orchestration',
+      'Limited microservices experience compared to monolithic Django',
+    ],
+    created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
+  },
+];
+
+export const DEMO_CANDIDATE_DETAIL: CandidateDetail = {
+  analysis_id: 'analysis-alex-stripe',
+  resume_id: 'resume-alex',
+  candidate_name: 'Alex Rivera',
+  email: 'alex.rivera.dev@gmail.com',
+  phone: '(415) 890-2341',
+  education: 'B.S. in Computer Science — UC Berkeley',
+  job_title: 'Senior Backend Engineer',
+  company: 'Stripe',
+  ats_score: 87.0,
+  match_score: 84.5,
+  skill_match: 86.0,
+  experience_match: 88.0,
+  raw_resume: `ALEX RIVERA
+San Francisco, CA • alex.rivera.dev@gmail.com • (415) 890-2341 • linkedin.com/in/alexrivera-dev
+
+PROFESSIONAL SUMMARY
+Senior Backend Engineer with 6+ years of experience building high-throughput microservices, scalable distributed architectures, and developer platforms. Proven expertise in Python, FastAPI, PostgreSQL, and AWS with a track record of driving 99.99% system availability and optimizing API latency for 5M+ daily requests.
+
+TECHNICAL SKILLS
+Languages: Python, Go, TypeScript, SQL
+Frameworks: FastAPI, Django, Flask, Pydantic, SQLAlchemy
+Databases: PostgreSQL, Redis, Elasticsearch, DynamoDB
+Cloud & DevOps: Docker, Kubernetes, AWS (ECS, S3, RDS), GitHub Actions, Terraform
+Core Competencies: REST APIs, System Design, Microservices, CI/CD Pipelines
+
+PROFESSIONAL EXPERIENCE
+Senior Backend Engineer — CloudScale Technologies | San Francisco, CA (2022 – Present)
+• Architected and deployed asynchronous REST APIs using FastAPI and PostgreSQL, serving 5M+ daily requests with sub-45ms p99 latency.
+• Engineered distributed caching layer with Redis cluster, reducing primary database load by 42%.
+• Spearheaded migration of monolithic service to containerized microservices orchestrated via Kubernetes on AWS ECS.
+• Automated end-to-end CI/CD deployment pipelines using GitHub Actions and Terraform, accelerating release frequency 4x daily.
+
+Software Engineer — Apex Financial Systems | Austin, TX (2020 – 2022)
+• Designed and maintained financial transaction processing pipelines handling $25M+ in monthly automated ledger reconciliations.
+• Implemented webhook subscription platform utilizing RabbitMQ message queues to guarantee zero event loss across banking partners.
+• Optimized PostgreSQL database queries and indexes, decreasing reporting export time from 14 minutes to under 45 seconds.
+
+EDUCATION
+B.S. in Computer Science — University of California, Berkeley (2018)`,
+  parsed_sections: {
+    summary: 'Senior Backend Engineer with 6+ years of experience building high-throughput microservices, scalable distributed architectures, and developer platforms. Proven expertise in Python, FastAPI, PostgreSQL, and AWS.',
+    skills: 'Python, Go, TypeScript, SQL, FastAPI, Django, PostgreSQL, Redis, Docker, Kubernetes, AWS, Terraform',
+    experience: 'CloudScale Technologies: Architected REST APIs using FastAPI and PostgreSQL for 5M+ daily requests. Apex Financial Systems: Maintained financial pipelines processing $25M+ monthly.',
+    education: 'B.S. in Computer Science — University of California, Berkeley (2018)',
+  },
+  match_explanation: 'Candidate Alex Rivera demonstrates an exceptional ATS compatibility score of 87.0% and a job match score of 84.5% for Senior Backend Engineer at Stripe. Meets all core requirements for Python, FastAPI, PostgreSQL, distributed caching, and microservices architecture. Strong quantified accomplishments across financial pipelines and latency engineering.',
+  missing_skills: [
+    'Docker (orchestration in early roles)',
+    'Kafka Event Streaming',
+    'Spring Boot (Bonus)',
+  ],
+  verified_skills: [
+    'Python',
+    'FastAPI',
+    'PostgreSQL',
+    'Redis',
+    'AWS',
+    'Kubernetes',
+    'System Design',
+    'REST APIs',
+    'Microservices',
+    'CI/CD Pipelines',
+  ],
+  strengths: [
+    'Strong Python & FastAPI microservices architecture with proven sub-45ms p99 latency benchmarks',
+    'Direct financial transactions and ledger reconciliation experience ($25M+/mo) directly relevant to Stripe',
+    'Production Kubernetes and AWS cloud infrastructure management',
+    'Measurable, quantified achievements across all engineering roles',
+  ],
+  concerns: [
+    'Missing explicit container orchestration details in early foundation roles',
+    'Limited Apache Kafka event streaming experience compared to RabbitMQ message broker',
+  ],
+  scores: {
+    'ATS Compatibility': 92.0,
+    'Keyword Match': 84.0,
+    'Skills Match': 86.0,
+    'Experience Match': 88.0,
+    'Formatting Quality': 92.0,
+  },
+  created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
+};
+
+export const DEMO_BILLING_OVERVIEW = {
+  current_plan: 'pro',
+  subscription: {
+    id: 'sub_demo_pro_101',
+    user_id: 'demo-user-id',
+    plan: 'pro',
+    provider: 'stripe',
+    provider_subscription_id: 'sub_1Oq49xLkdIwHu7ixTest',
+    status: 'active',
+    current_period_start: new Date(Date.now() - 86400000 * 12).toISOString(),
+    current_period_end: new Date(Date.now() + 86400000 * 18).toISOString(),
+    cancel_at_period_end: false,
+    trial_end: undefined,
+    created_at: new Date(Date.now() - 86400000 * 42).toISOString(),
+  },
+  usage: {
+    month: new Date().toISOString().slice(0, 7),
+    analyses_used: 14,
+    max_analyses: -1,
+    resumes_uploaded: 6,
+    ai_generations_used: 8,
+    can_analyze: true,
+  },
+  plans: [
+    {
+      id: 'free',
+      name: 'Free',
+      price_inr: 0,
+      billing_interval: 'month',
+      features: [
+        '3 Resume Analyses / month',
+        'Core ATS Compatibility Score',
+        'Keyword & Skill Gap Detection',
+        'Basic Formatting Review',
+        'PDF Export'
+      ],
+      max_analyses: 3,
+      allows_tailor: false,
+      allows_cover_letter: false,
+      allows_recruiter: false,
+    },
+    {
+      id: 'pro',
+      name: 'Pro',
+      price_inr: 299,
+      billing_interval: 'month',
+      features: [
+        'Unlimited Resume Analyses',
+        'AI Resume Tailor (Side-by-Side Comparison)',
+        'AI Cover Letter Generator',
+        'Bullet Point Impact Polisher',
+        'Target Job Keyword Optimization',
+        'Priority ATS Parsing Engine'
+      ],
+      max_analyses: -1,
+      allows_tailor: true,
+      allows_cover_letter: true,
+      allows_recruiter: false,
+    },
+    {
+      id: 'recruiter',
+      name: 'Recruiter',
+      price_inr: 1999,
+      billing_interval: 'month',
+      features: [
+        'Everything in Pro included',
+        'Recruiter Dashboard & Multi-Job Pipeline',
+        'Bulk Resume Screening (1 to 100 resumes)',
+        'Automated Candidate Ranking Matrix',
+        'In-depth Candidate Strengths & Gaps Profiles',
+        'Bulk CSV & PDF Pipeline Reports'
+      ],
+      max_analyses: -1,
+      allows_tailor: true,
+      allows_cover_letter: true,
+      allows_recruiter: true,
+    }
+  ],
+  invoices: [
+    {
+      id: 'inv_101',
+      invoice_number: 'INV-2026-03-8821',
+      provider: 'stripe',
+      amount: 299.0,
+      currency: 'INR',
+      status: 'paid',
+      plan_name: 'Pro Plan',
+      paid_at: new Date(Date.now() - 86400000 * 12).toISOString(),
+      created_at: new Date(Date.now() - 86400000 * 12).toISOString(),
+    },
+    {
+      id: 'inv_100',
+      invoice_number: 'INV-2026-02-7104',
+      provider: 'stripe',
+      amount: 299.0,
+      currency: 'INR',
+      status: 'paid',
+      plan_name: 'Pro Plan',
+      paid_at: new Date(Date.now() - 86400000 * 42).toISOString(),
+      created_at: new Date(Date.now() - 86400000 * 42).toISOString(),
+    }
+  ],
+  payments: [
+    {
+      id: 'pay_101',
+      provider: 'stripe',
+      provider_payment_id: 'pi_3Ptest9811428',
+      amount: 299.0,
+      currency: 'INR',
+      status: 'succeeded',
+      payment_method: 'card',
+      failure_reason: undefined,
+      created_at: new Date(Date.now() - 86400000 * 12).toISOString(),
+    }
+  ]
+};
+
+
 

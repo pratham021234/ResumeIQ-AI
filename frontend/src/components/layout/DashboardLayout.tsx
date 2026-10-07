@@ -75,9 +75,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
             </button>
 
             {/* Plan Badge */}
-            <div className="hidden lg:flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
-              Pro Plan
-            </div>
+            <Link
+              href="/billing"
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 hover:border-indigo-400 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            >
+              <Sparkles className="w-3 h-3 text-indigo-500" />
+              <span>Pro Plan</span>
+            </Link>
 
             {/* User Avatar */}
             <Link
