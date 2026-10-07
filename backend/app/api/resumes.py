@@ -202,6 +202,12 @@ def delete_resume(
         # Nullify any cover letter foreign keys
         db.query(CoverLetter).filter(CoverLetter.resume_id == resume_id).update({"resume_id": None})
 
+        # Explicitly delete candidate evaluations associated with analyses of this resume
+        analysis_ids = [a.id for a in resume.analyses]
+        if analysis_ids:
+            from app.models.models import CandidateEvaluation
+            db.query(CandidateEvaluation).filter(CandidateEvaluation.analysis_id.in_(analysis_ids)).delete(synchronize_session=False)
+
         # Remove physical file if on disk
         if resume.file_path and os.path.exists(resume.file_path):
             try:

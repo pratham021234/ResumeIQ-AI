@@ -17,6 +17,7 @@ from app.api.reports import router as reports_router
 from app.api.dashboard import router as dashboard_router
 from app.api.recruiter import router as recruiter_router
 from app.api.billing import router as billing_router
+from app.api.copilot import router as copilot_router
 
 # Initialize tables
 Base.metadata.create_all(bind=engine)
@@ -35,9 +36,18 @@ app = FastAPI(
 )
 
 # Enable CORS for Next.js frontend
+cors_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+if settings.FRONTEND_URL and settings.FRONTEND_URL not in cors_origins:
+    cors_origins.append(settings.FRONTEND_URL)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*", "http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -57,6 +67,8 @@ app.include_router(reports_router, prefix="/api")
 app.include_router(dashboard_router, prefix="/api")
 app.include_router(recruiter_router, prefix="/api")
 app.include_router(billing_router, prefix="/api")
+app.include_router(copilot_router, prefix="/api")
+
 
 @app.get("/")
 def root():

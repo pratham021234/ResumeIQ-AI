@@ -5,7 +5,7 @@ import pymupdf as fitz
 from docx import Document
 
 EMAIL_REGEX = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+'
-PHONE_REGEX = r'(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}'
+PHONE_REGEX = r'(?:(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4})'
 LINKEDIN_REGEX = r'(?:linkedin\.com\/(?:in|pub)\/([a-zA-Z0-9_-]+)|linkedin:\s*([a-zA-Z0-9_-]+))'
 GITHUB_REGEX = r'(?:github\.com\/([a-zA-Z0-9_-]+)|github:\s*([a-zA-Z0-9_-]+))'
 URL_REGEX = r'https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
@@ -123,7 +123,14 @@ class ResumeParser:
         # Extract contact information
         emails = list(set(re.findall(EMAIL_REGEX, raw_text)))
         phones = list(set([m[0] if isinstance(m, tuple) else m for m in re.findall(PHONE_REGEX, raw_text)]))
+        valid_phones = [p.strip() for p in phones if len(p.strip()) > 7]
         links = list(set(re.findall(URL_REGEX, raw_text)))
+
+        linkedin_match = re.search(LINKEDIN_REGEX, raw_text, re.IGNORECASE)
+        linkedin = linkedin_match.group(0) if linkedin_match else next((l for l in links if "linkedin.com" in l), None)
+
+        github_match = re.search(GITHUB_REGEX, raw_text, re.IGNORECASE)
+        github = github_match.group(0) if github_match else next((l for l in links if "github.com" in l), None)
         
         # Section extraction
         lines = [line.strip() for line in raw_text.split("\n") if line.strip()]
@@ -163,8 +170,12 @@ class ResumeParser:
             "file_name": filename,
             "raw_text": raw_text,
             "contact_info": {
+                "email": emails[0] if emails else None,
                 "emails": emails,
-                "phones": [p.strip() for p in phones if len(p.strip()) > 7],
+                "phone": valid_phones[0] if valid_phones else None,
+                "phones": valid_phones,
+                "linkedin": linkedin,
+                "github": github,
                 "links": links
             },
             "detected_headers": list(header_detected_counts.keys()),

@@ -4,7 +4,11 @@ import {
   ResumeTailorResponse,
   RecruiterJob,
   CandidateRankingItem,
-  CandidateDetail
+  CandidateDetail,
+  CopilotCandidate,
+  CopilotEvaluation,
+  CopilotJobSummary,
+  CopilotAnalytics
 } from '@/types';
 
 export const DEMO_ANALYSIS: Analysis = {
@@ -855,6 +859,308 @@ export const DEMO_BILLING_OVERVIEW = {
     }
   ]
 };
+
+export const DEMO_COPILOT_JOBS: CopilotJobSummary[] = [
+  {
+    id: 'job-stripe-backend',
+    title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    skills: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'Docker', 'AWS', 'Kubernetes'],
+    experience_level: 'Senior',
+    candidate_count: 5,
+    shortlisted_count: 3,
+    average_ats_score: 83.4,
+    created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
+  },
+  {
+    id: 'job-vercel-platform',
+    title: 'Staff Platform Engineer',
+    company: 'Vercel',
+    skills: ['Go', 'TypeScript', 'Kubernetes', 'Docker', 'AWS', 'Next.js'],
+    experience_level: 'Lead',
+    candidate_count: 3,
+    shortlisted_count: 2,
+    average_ats_score: 81.2,
+    created_at: new Date(Date.now() - 86400000 * 7).toISOString(),
+  },
+  {
+    id: 'job-anthropic-ai',
+    title: 'Lead Distributed Systems Architect',
+    company: 'Anthropic',
+    skills: ['Python', 'C++', 'Ray', 'Kubernetes', 'Distributed Systems'],
+    experience_level: 'Senior',
+    candidate_count: 4,
+    shortlisted_count: 2,
+    average_ats_score: 86.8,
+    created_at: new Date(Date.now() - 86400000 * 12).toISOString(),
+  },
+];
+
+export const DEMO_COPILOT_CANDIDATES: CopilotCandidate[] = [
+  {
+    rank: 1,
+    analysis_id: 'analysis-alex-stripe',
+    resume_id: 'resume-alex',
+    candidate_name: 'Alex Rivera',
+    email: 'alex.rivera.dev@gmail.com',
+    phone: '(415) 890-2341',
+    role: 'Senior Backend Engineer',
+    job_id: 'job-stripe-backend',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    ats_score: 89.5,
+    match_score: 86.0,
+    stage: 'Shortlisted',
+    hiring_decision: 'Strong Yes',
+    confidence_score: 95.5,
+    rating: 5,
+    verified_skills: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'AWS', 'Kubernetes', 'System Design'],
+    missing_skills: ['Kafka Event Streaming'],
+    executive_summary: 'Exceptional senior candidate with proven high-throughput payment architectures, sub-45ms p99 latency benchmarks, and verified production Kubernetes experience. Strong cultural and technical fit.',
+    created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
+  },
+  {
+    rank: 2,
+    analysis_id: 'analysis-jordan-backend',
+    resume_id: 'resume-jordan',
+    candidate_name: 'Jordan Lee',
+    email: 'jordan.lee@techmail.io',
+    phone: '(206) 555-0192',
+    role: 'Backend Engineer',
+    job_id: 'job-stripe-backend',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    ats_score: 83.5,
+    match_score: 80.0,
+    stage: 'Interview',
+    hiring_decision: 'Yes',
+    confidence_score: 89.0,
+    rating: 4,
+    verified_skills: ['Go', 'Python', 'PostgreSQL', 'Docker', 'Redis', 'REST APIs'],
+    missing_skills: ['Kubernetes', 'AWS Lambda'],
+    executive_summary: 'Solid backend engineer with robust Go & Python competencies and database indexing achievements. Would benefit from verification on large-scale distributed consensus and AWS clustering.',
+    created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
+  {
+    rank: 3,
+    analysis_id: 'analysis-sarah-fullstack',
+    resume_id: 'resume-sarah',
+    candidate_name: 'Sarah Chen',
+    email: 'sarah.chen@innovate.org',
+    phone: '(917) 555-4412',
+    role: 'Full Stack & Backend Engineer',
+    job_id: 'job-stripe-backend',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    ats_score: 77.0,
+    match_score: 73.5,
+    stage: 'Screening',
+    hiring_decision: 'Leaning Yes',
+    confidence_score: 81.5,
+    rating: 3,
+    verified_skills: ['Python', 'Django', 'Flask', 'MySQL', 'Redis'],
+    missing_skills: ['FastAPI', 'Kubernetes', 'AWS'],
+    executive_summary: 'Strong academic foundation and Python proficiency. Has supported high user volumes, but lacks modern async FastAPI and container orchestration required for primary Stripe backend workflows.',
+    created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
+  },
+  {
+    rank: 4,
+    analysis_id: 'analysis-elena-data',
+    resume_id: 'resume-elena',
+    candidate_name: 'Elena Rostova',
+    email: 'elena.rostova@datasys.io',
+    phone: '(650) 412-9844',
+    role: 'Software Engineer',
+    job_id: 'job-stripe-backend',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    ats_score: 71.5,
+    match_score: 67.0,
+    stage: 'Screening',
+    hiring_decision: 'Leaning No',
+    confidence_score: 79.0,
+    rating: 2,
+    verified_skills: ['Python', 'Django', 'PostgreSQL'],
+    missing_skills: ['Kubernetes', 'FastAPI', 'Redis', 'Docker'],
+    executive_summary: 'Competent junior-to-mid developer with standard Django workflows. Lacks necessary depth in distributed systems, asynchronous networking, and DevOps pipelines needed for senior responsibilities.',
+    created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
+  },
+  {
+    rank: 5,
+    analysis_id: 'analysis-marcus-general',
+    resume_id: 'resume-marcus',
+    candidate_name: 'Marcus Vance',
+    email: 'marcus.vance@techdev.net',
+    phone: '(312) 880-9921',
+    role: 'Web Developer',
+    job_id: 'job-stripe-backend',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    ats_score: 58.0,
+    match_score: 51.0,
+    stage: 'Rejected',
+    hiring_decision: 'Strong No',
+    confidence_score: 93.0,
+    rating: 1,
+    verified_skills: ['JavaScript', 'HTML', 'CSS', 'Node.js'],
+    missing_skills: ['Python', 'FastAPI', 'PostgreSQL', 'Redis', 'AWS', 'Kubernetes'],
+    executive_summary: 'Candidate profile shows primarily frontend web skills. Core Python and backend system design requirements are completely absent. Profile does not meet baseline engineering bar.',
+    created_at: new Date(Date.now() - 86400000 * 6).toISOString(),
+  },
+];
+
+export const DEMO_COPILOT_EVALUATION: CopilotEvaluation = {
+  id: 'eval-alex-stripe-copilot',
+  analysis_id: 'analysis-alex-stripe',
+  job_id: 'job-stripe-backend',
+  job_title: 'Senior Backend Engineer',
+  company: 'Stripe',
+  candidate_name: 'Alex Rivera',
+  email: 'alex.rivera.dev@gmail.com',
+  phone: '(415) 890-2341',
+  education: 'B.S. in Computer Science — UC Berkeley',
+  stage: 'Shortlisted',
+  hiring_decision: 'Strong Yes',
+  decision_reasoning: 'Alex Rivera demonstrates exceptional qualifications for the Senior Backend Engineer role at Stripe. Outstanding ATS score (89.5%) with verifiable experience architecting sub-45ms asynchronous APIs and managing $25M+/mo financial ledger flows. Unanimous recommendation to expedite to technical interview round.',
+  confidence_score: 95.5,
+  rating: 5,
+  ats_score: 89.5,
+  match_score: 86.0,
+  executive_summary: 'Alex Rivera stands out as a tier-1 candidate with deep experience in high-throughput Python/FastAPI microservices, PostgreSQL optimization, and cloud operations. His prior work in financial data pipelines mirrors Stripe core payments infrastructure. Minimal training needed; high velocity contributor potential.',
+  strengths: [
+    {
+      title: 'High-Throughput API Architecture',
+      description: 'Proven track record of designing asynchronous microservices serving 5M+ daily requests with sub-45ms latency benchmarks.',
+      evidence: 'Spearheaded CloudScale REST API backend utilizing FastAPI and PostgreSQL.',
+      impact: 'Immediate capability to scale Stripe payment endpoint throughput without re-architecture.'
+    },
+    {
+      title: 'Ledger Reconciliation & Financial Safeguards',
+      description: 'Engineered financial transaction processing pipelines handling $25M+ in automated monthly ledger reconciliations.',
+      evidence: 'Designed RabbitMQ message broker ingestion layer with zero event loss guarantees at Apex Financial Systems.',
+      impact: 'Deep domain familiarity with transactional consistency, idempotency keys, and auditability.'
+    },
+    {
+      title: 'Production Container Orchestration',
+      description: 'Extensive hands-on experience orchestrating multi-service Kubernetes clusters and automating Terraform CI/CD pipelines.',
+      evidence: 'Migrated monolithic service to containerized microservices orchestrated via Kubernetes on AWS ECS.',
+      impact: 'Autonomously manages devops lifecycle and reduces infrastructure friction.'
+    }
+  ],
+  concerns: [
+    {
+      title: 'Apache Kafka vs. RabbitMQ Tooling',
+      description: 'Demonstrated expertise with RabbitMQ message brokers, but Stripe payments infrastructure relies heavily on Apache Kafka.',
+      severity: 'Medium',
+      mitigation: 'Underlying event streaming and distributed consumer group concepts transfer readily; probe Kafka partition semantics in interview.'
+    },
+    {
+      title: 'Distributed Consensus & Two-Phase Commit',
+      description: 'Limited explicit mention of distributed consensus protocols (e.g. Raft, Paxos) or 2PC for cross-database operations.',
+      severity: 'Low',
+      mitigation: 'Assess distributed systems design questions during live system design round.'
+    }
+  ],
+  skill_gap_analysis: {
+    verified_skills: [
+      { skill: 'Python', status: 'Verified', proficiency: 'Expert', match_confidence: 96 },
+      { skill: 'FastAPI', status: 'Verified', proficiency: 'Expert', match_confidence: 94 },
+      { skill: 'PostgreSQL', status: 'Verified', proficiency: 'Advanced', match_confidence: 92 },
+      { skill: 'Redis', status: 'Verified', proficiency: 'Advanced', match_confidence: 90 },
+      { skill: 'AWS', status: 'Verified', proficiency: 'Intermediate', match_confidence: 85 },
+      { skill: 'Kubernetes', status: 'Verified', proficiency: 'Intermediate', match_confidence: 84 },
+      { skill: 'System Design', status: 'Verified', proficiency: 'Advanced', match_confidence: 89 },
+    ],
+    critical_gaps: [
+      { skill: 'Apache Kafka', priority: 'High', risk_level: 'Medium', reasoning: 'Key distributed streaming backbone required for real-time ledger settlement events.' }
+    ],
+    secondary_gaps: [
+      { skill: 'Terraform Enterprise', priority: 'Medium', risk_level: 'Low', reasoning: 'Candidate has standard Terraform experience; enterprise state management easily learned on the job.' }
+    ]
+  },
+  interview_questions: [
+    {
+      category: 'System Architecture',
+      question: 'Walk me through how you designed your FastAPI service to maintain sub-45ms p99 latency during 5M+ daily transaction spikes. What connection pooling, caching strategies, and async concurrency models did you employ?',
+      purpose: 'Validates senior architectural rigor and performance optimization depth under real-world load.',
+      what_to_listen_for: [
+        'Mentions asynchronous SQLAlchemy connection pooling and persistent DB sessions',
+        'Explains cache stampede prevention and Redis TTL strategies',
+        'Details p99 vs median latency trade-offs and bottleneck diagnostics'
+      ]
+    },
+    {
+      category: 'Skill Gap Probe',
+      question: 'Your resume shows extensive RabbitMQ messaging background, whereas Stripe heavily leverages Apache Kafka. How would you design a partitioned payment event stream in Kafka to guarantee strictly ordered transaction processing without data loss?',
+      purpose: 'Evaluates candidate conceptual transferability and deep comprehension of distributed log architectures.',
+      what_to_listen_for: [
+        'Explains partition key hashing (e.g., customer_id or merchant_id) for ordered delivery',
+        'Addresses consumer rebalance behavior and consumer group lag monitoring',
+        'Mentions at-least-once vs exactly-once semantics and downstream idempotency'
+      ]
+    },
+    {
+      category: 'Behavioral STAR',
+      question: 'Describe a high-stakes production incident where a payment pipeline or database transaction failed. How did you isolate root cause, guarantee data consistency, and safeguard customer funds?',
+      purpose: 'Probes resilience, production maturity, and customer-first operational responsibility.',
+      what_to_listen_for: [
+        'Clear structure: Situation, Task, Action, Result with quantifiable impact',
+        'Focus on ledger reconciliations, dead-letter queues, and rollback plans',
+        'Blameless post-mortem culture and long-term automated prevention measures'
+      ]
+    },
+    {
+      category: 'Role Synergy & Culture',
+      question: 'At Stripe, engineers own their services end-to-end—from database migrations to on-call rotations. How do you approach zero-downtime database migrations when updating high-frequency tables?',
+      purpose: 'Checks alignment with engineering ownership culture and zero-downtime production standards.',
+      what_to_listen_for: [
+        'Advocates multi-step expand-and-contract migrations (e.g., dual-writing, backfilling)',
+        'Understands lock contention and Postgres transactional DDL caveats',
+        'Displays genuine enthusiasm for reliable developer platform tooling'
+      ]
+    }
+  ],
+  recruiter_notes: 'Spoke with Alex during initial phone screen. Great communication skills, highly articulate on systems trade-offs. Strongly recommend booking the technical onsite loop immediately.',
+  created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
+  updated_at: new Date().toISOString(),
+};
+
+export const DEMO_COPILOT_ANALYTICS: CopilotAnalytics = {
+  total_screened: 16,
+  shortlisted_count: 7,
+  interview_count: 4,
+  offer_count: 2,
+  rejected_count: 3,
+  avg_ats_score: 81.6,
+  avg_match_score: 78.4,
+  hiring_velocity_days: 4.2,
+  stage_funnel: [
+    { stage: 'Screened', count: 16, percentage: 100 },
+    { stage: 'Shortlisted', count: 7, percentage: 43.8 },
+    { stage: 'Interview', count: 4, percentage: 25.0 },
+    { stage: 'Offer', count: 2, percentage: 12.5 },
+  ],
+  score_distribution: [
+    { range: '90-100%', count: 3, percentage: 18.7 },
+    { range: '80-89%', count: 8, percentage: 50.0 },
+    { range: '70-79%', count: 3, percentage: 18.7 },
+    { range: '<70%', count: 2, percentage: 12.6 },
+  ],
+  top_pool_skill_gaps: [
+    { skill: 'Apache Kafka', missing_in_candidates: 11, pool_percentage: 68.8 },
+    { skill: 'Kubernetes', missing_in_candidates: 9, pool_percentage: 56.2 },
+    { skill: 'Distributed Systems', missing_in_candidates: 7, pool_percentage: 43.8 },
+    { skill: 'Terraform', missing_in_candidates: 6, pool_percentage: 37.5 },
+  ],
+  decision_breakdown: {
+    'Strong Yes': 3,
+    'Yes': 4,
+    'Leaning Yes': 4,
+    'Leaning No': 3,
+    'Strong No': 2,
+  },
+};
+
 
 
 

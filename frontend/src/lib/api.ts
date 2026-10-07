@@ -15,8 +15,21 @@ import {
   BatchScreenResponse,
   BillingOverview,
   CheckoutSessionResponse,
+  CopilotCandidate,
+  CopilotEvaluation,
+  CopilotJobSummary,
+  CopilotAnalytics,
 } from '@/types';
-import { DEMO_ANALYSIS, DEMO_STATS, DEMO_TAILOR_RESPONSE, DEMO_BILLING_OVERVIEW } from './demoData';
+import {
+  DEMO_ANALYSIS,
+  DEMO_STATS,
+  DEMO_TAILOR_RESPONSE,
+  DEMO_BILLING_OVERVIEW,
+  DEMO_COPILOT_JOBS,
+  DEMO_COPILOT_CANDIDATES,
+  DEMO_COPILOT_EVALUATION,
+  DEMO_COPILOT_ANALYTICS,
+} from './demoData';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 
@@ -456,6 +469,90 @@ class ApiClient {
     return await this.request('/billing/simulate/trial-expiration', {
       method: 'POST',
       body: JSON.stringify({}),
+    });
+  }
+
+  // --- AI HIRING COPILOT (B2B SaaS Module) ---
+  async getCopilotJobs(): Promise<CopilotJobSummary[]> {
+    try {
+      const jobs = await this.request<CopilotJobSummary[]>('/copilot/jobs');
+      return jobs && jobs.length > 0 ? jobs : DEMO_COPILOT_JOBS;
+    } catch {
+      return DEMO_COPILOT_JOBS;
+    }
+  }
+
+  async getCopilotCandidates(params?: {
+    job_id?: string;
+    stage?: string;
+    decision?: string;
+    search?: string;
+    min_score?: number;
+  }): Promise<CopilotCandidate[]> {
+    try {
+      const query = new URLSearchParams();
+      if (params?.job_id) query.append('job_id', params.job_id);
+      if (params?.stage) query.append('stage', params.stage);
+      if (params?.decision) query.append('decision', params.decision);
+      if (params?.search) query.append('search', params.search);
+      if (params?.min_score !== undefined) query.append('min_score', params.min_score.toString());
+
+      const qs = query.toString();
+      const candidates = await this.request<CopilotCandidate[]>(`/copilot/candidates${qs ? `?${qs}` : ''}`);
+      return candidates && candidates.length > 0 ? candidates : DEMO_COPILOT_CANDIDATES;
+    } catch {
+      return DEMO_COPILOT_CANDIDATES;
+    }
+  }
+
+  async getCopilotCandidateDetail(analysisId: string): Promise<CopilotEvaluation> {
+    try {
+      return await this.request<CopilotEvaluation>(`/copilot/candidate/${analysisId}`);
+    } catch {
+      return DEMO_COPILOT_EVALUATION;
+    }
+  }
+
+  async evaluateCopilotCandidate(analysisId: string): Promise<CopilotEvaluation> {
+    try {
+      return await this.request<CopilotEvaluation>(`/copilot/candidate/${analysisId}/evaluate`, {
+        method: 'POST',
+      });
+    } catch {
+      return DEMO_COPILOT_EVALUATION;
+    }
+  }
+
+  async updateCandidateStage(
+    analysisId: string,
+    data: { stage: string; recruiter_notes?: string; hiring_decision?: string }
+  ): Promise<CopilotEvaluation> {
+    return await this.request<CopilotEvaluation>(`/copilot/candidate/${analysisId}/stage`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getCopilotAnalytics(jobId?: string): Promise<CopilotAnalytics> {
+    try {
+      return await this.request<CopilotAnalytics>(`/copilot/analytics${jobId ? `?job_id=${jobId}` : ''}`);
+    } catch {
+      return DEMO_COPILOT_ANALYTICS;
+    }
+  }
+
+  async batchEvaluateCopilot(jobId?: string, minScore?: number): Promise<{
+    success: boolean;
+    total_evaluated: number;
+    auto_shortlisted: number;
+    message: string;
+    evaluated?: number;
+    shortlisted?: number;
+    evaluations?: CopilotEvaluation[];
+  }> {
+    return await this.request('/copilot/batch-evaluate', {
+      method: 'POST',
+      body: JSON.stringify({ job_id: jobId, min_score: minScore }),
     });
   }
 }

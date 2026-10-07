@@ -14,6 +14,7 @@ import {
   CreditCard,
   Settings,
   Users2,
+  Bot,
   ShieldCheck,
   ChevronRight,
   LogOut,
@@ -100,8 +101,25 @@ export const Sidebar: React.FC<{ isOpen?: boolean; onClose?: () => void }> = ({
         {/* Recruiter Dashboard (Behind Feature Flag) */}
         <div className="pt-4 mt-4 border-t border-zinc-800/80">
           <div className="px-3 pb-2 text-[11px] font-semibold tracking-wider uppercase text-zinc-500">
-            For Employers
+            For Employers & Teams
           </div>
+          <Link
+            href="/copilot"
+            onClick={onClose}
+            className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors mb-1 ${
+              pathname === '/copilot'
+                ? 'bg-zinc-800 text-white font-semibold'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/60'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <Bot className="w-4 h-4 text-emerald-400" />
+              <span>AI Hiring Copilot</span>
+            </div>
+            <span className="px-1.5 py-0.5 text-[9px] font-bold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded">
+              SaaS
+            </span>
+          </Link>
           <Link
             href="/recruiter"
             onClick={onClose}

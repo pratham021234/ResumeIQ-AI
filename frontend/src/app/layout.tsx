@@ -13,9 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'ResumeIQ AI — AI-Powered ATS Resume Analyzer',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://resumeiq.ai'),
+  title: {
+    default: 'ResumeIQ AI — AI-Powered ATS Resume Analyzer & Hiring Platform',
+    template: '%s | ResumeIQ AI',
+  },
   description:
-    'Make your resume beat the ATS. Deterministic ATS compatibility scoring, categorized missing keywords, skill gap radar, and AI bullet optimization.',
+    'Make your resume beat the ATS. Deterministic ATS compatibility scoring, categorized missing keywords, skill gap radar, AI bullet optimization, and automated B2B hiring copilot.',
   keywords: [
     'ATS resume analyzer',
     'AI resume optimizer',
@@ -23,8 +27,29 @@ export const metadata: Metadata = {
     'resume bullet improver',
     'job match score',
     'ATS keywords',
+    'AI hiring copilot',
+    'recruiter resume screening',
   ],
   authors: [{ name: 'ResumeIQ AI Engineering Team' }],
+  openGraph: {
+    title: 'ResumeIQ AI — AI-Powered ATS Resume Analyzer',
+    description:
+      'Beat applicant tracking systems with deterministic scoring, keyword gap detection, and AI resume tailoring.',
+    url: 'https://resumeiq.ai',
+    siteName: 'ResumeIQ AI',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ResumeIQ AI — AI-Powered ATS Resume Analyzer',
+    description:
+      'Deterministic ATS scoring and AI resume tailoring for top engineers.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {

@@ -359,5 +359,134 @@ export interface CheckoutSessionResponse {
   plan_name: string;
 }
 
+// AI Hiring Copilot Types (Enterprise B2B)
+export interface InterviewQuestion {
+  category: string;
+  difficulty?: string;
+  question: string;
+  rationale?: string;
+  purpose?: string;
+  what_to_listen_for?: string | string[];
+}
+
+export interface CopilotCandidate {
+  rank: number;
+  analysis_id: string;
+  resume_id: string;
+  job_id?: string;
+  job_title?: string;
+  candidate_name: string;
+  email: string;
+  phone?: string;
+  role?: string;
+  company?: string;
+  ats_score: number;
+  match_score: number;
+  stage: 'Screening' | 'Shortlisted' | 'Interview' | 'Offer' | 'Rejected' | string;
+  hiring_decision: 'Strong Yes' | 'Yes' | 'Leaning Yes' | 'Leaning No' | 'Strong No' | string;
+  confidence_score: number;
+  rating: number;
+  verified_skills: string[];
+  missing_skills: string[];
+  executive_summary?: string;
+  created_at?: string;
+}
+
+export interface CopilotEvaluation {
+  id: string;
+  analysis_id: string;
+  job_id: string;
+  job_title: string;
+  company: string;
+  candidate_name: string;
+  email: string;
+  phone?: string;
+  education?: string;
+  stage: string;
+  hiring_decision: string;
+  decision_reasoning: string;
+  confidence_score: number;
+  rating: number;
+  ats_score: number;
+  match_score: number;
+  executive_summary: string;
+  strengths: Array<{
+    title: string;
+    description: string;
+    evidence: string;
+    impact: string;
+  }>;
+  concerns: Array<{
+    title: string;
+    description: string;
+    severity: string;
+    mitigation: string;
+  }>;
+  skill_gap_analysis: {
+    verified_skills?: Array<{
+      skill: string;
+      status: string;
+      proficiency: string;
+      match_confidence: number;
+    }>;
+    critical_gaps?: Array<{
+      skill: string;
+      priority: string;
+      risk_level: string;
+      reasoning: string;
+    }>;
+    secondary_gaps?: Array<{
+      skill: string;
+      priority: string;
+      risk_level: string;
+      reasoning: string;
+    }>;
+  };
+  interview_questions: InterviewQuestion[];
+  recruiter_notes: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface CopilotJobSummary {
+  id: string;
+  title: string;
+  company: string;
+  skills: string[];
+  experience_level: string;
+  candidate_count: number;
+  shortlisted_count: number;
+  average_ats_score: number;
+  created_at?: string;
+}
+
+export interface CopilotAnalytics {
+  total_screened: number;
+  shortlisted_count: number;
+  interview_count: number;
+  offer_count: number;
+  rejected_count: number;
+  avg_ats_score: number;
+  avg_match_score: number;
+  hiring_velocity_days: number;
+  stage_funnel: Array<{
+    stage: string;
+    count: number;
+    percentage: number;
+  }>;
+  score_distribution: Array<{
+    range: string;
+    count: number;
+    percentage: number;
+  }>;
+  top_pool_skill_gaps: Array<{
+    skill: string;
+    missing_in_candidates: number;
+    pool_percentage: number;
+  }>;
+  decision_breakdown: Record<string, number>;
+}
+
+
 
 

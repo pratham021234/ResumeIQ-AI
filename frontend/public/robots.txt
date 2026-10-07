@@ -1,0 +1,8 @@
+# robots.txt for ResumeIQ AI
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /settings
+Disallow: /billing
+
+Sitemap: https://resumeiq.ai/sitemap.xml

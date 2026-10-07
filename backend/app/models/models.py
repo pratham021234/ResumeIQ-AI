@@ -112,6 +112,7 @@ class Analysis(Base):
     issues = relationship("ResumeIssue", back_populates="analysis", cascade="all, delete-orphan")
     recommendations = relationship("Recommendation", back_populates="analysis", cascade="all, delete-orphan")
     reports = relationship("Report", back_populates="analysis", cascade="all, delete-orphan")
+    copilot_evaluation = relationship("CandidateEvaluation", back_populates="analysis", uselist=False, cascade="all, delete-orphan")
 
 class AnalysisScore(Base):
     __tablename__ = "analysis_scores"
@@ -295,3 +296,33 @@ class Report(Base):
 
     user = relationship("User", back_populates="reports")
     analysis = relationship("Analysis", back_populates="reports")
+
+class CandidateEvaluation(Base):
+    __tablename__ = "candidate_evaluations"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    analysis_id = Column(String(36), ForeignKey("analyses.id"), nullable=False, unique=True, index=True)
+    job_id = Column(String(36), ForeignKey("job_descriptions.id"), nullable=False, index=True)
+    candidate_name = Column(String(255), nullable=False)
+
+    # Stage & Decision
+    stage = Column(String(50), default="Screening")  # Applied, Screening, Shortlisted, Interview, Offer, Rejected
+    hiring_decision = Column(String(50), default="Leaning Yes")  # Strong Yes, Yes, Leaning Yes, Leaning No, Strong No
+    decision_reasoning = Column(Text, nullable=True)
+    confidence_score = Column(Float, default=85.0)
+    rating = Column(Integer, default=4)  # 1 to 5 stars
+
+    # Executive Evaluation
+    executive_summary = Column(Text, nullable=True)
+    strengths = Column(JSON, nullable=True)
+    concerns = Column(JSON, nullable=True)
+    skill_gap_analysis = Column(JSON, nullable=True)
+    interview_questions = Column(JSON, nullable=True)
+    recruiter_notes = Column(Text, nullable=True)
+
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
+
+    analysis = relationship("Analysis", back_populates="copilot_evaluation")
+    job = relationship("JobDescription", backref="candidate_evaluations")
+
