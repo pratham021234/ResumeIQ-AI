@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { env } from '@/lib/env';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -13,7 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://resumeiq.ai'),
+  metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
+
   title: {
     default: 'ResumeIQ AI — AI-Powered ATS Resume Analyzer & Hiring Platform',
     template: '%s | ResumeIQ AI',

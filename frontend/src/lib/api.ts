@@ -30,8 +30,10 @@ import {
   DEMO_COPILOT_EVALUATION,
   DEMO_COPILOT_ANALYTICS,
 } from './demoData';
+import { env } from './env';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+const API_BASE = env.NEXT_PUBLIC_API_URL;
+
 
 
 class ApiClient {
