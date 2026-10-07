@@ -15,10 +15,8 @@ import {
   BatchScreenResponse,
   BillingOverview,
   CheckoutSessionResponse,
-  AdminAnalyticsMetrics,
 } from '@/types';
 import { DEMO_ANALYSIS, DEMO_STATS, DEMO_TAILOR_RESPONSE, DEMO_BILLING_OVERVIEW } from './demoData';
-
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 
@@ -460,14 +458,8 @@ class ApiClient {
       body: JSON.stringify({}),
     });
   }
-
-  // Admin Analytics & Product Telemetry
-  async getAdminAnalytics(days: number = 30): Promise<AdminAnalyticsMetrics> {
-    return await this.request<AdminAnalyticsMetrics>(`/analytics/admin/overview?days=${days}`);
-  }
 }
 
 export const api = new ApiClient();
-
 
 

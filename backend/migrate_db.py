@@ -144,31 +144,6 @@ if os.path.exists(db_path):
     """)
     print("Ensured usage_trackers table")
 
-    # Create analytics_events table
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS analytics_events (
-        id VARCHAR(36) PRIMARY KEY,
-        event_name VARCHAR(100) NOT NULL,
-        category VARCHAR(50) NOT NULL,
-        user_id VARCHAR(36),
-        anonymous_id VARCHAR(100),
-        session_id VARCHAR(100),
-        properties JSON,
-        url VARCHAR(500),
-        referrer VARCHAR(500),
-        source VARCHAR(100) DEFAULT 'direct',
-        ip_hash VARCHAR(64),
-        user_agent VARCHAR(255),
-        created_at DATETIME,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )
-    """)
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_analytics_event_name ON analytics_events(event_name)")
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_analytics_category ON analytics_events(category)")
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_analytics_created_at ON analytics_events(created_at)")
-    print("Ensured analytics_events table and indexes")
-
     conn.commit()
     conn.close()
     print("Migration finished successfully.")
-

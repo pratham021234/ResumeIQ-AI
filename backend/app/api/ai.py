@@ -74,17 +74,7 @@ def tailor_resume_endpoint(
     ))
     db.commit()
 
-
-    if user_id:
-        from app.services.analytics_service import AnalyticsService
-        try:
-            forecast_increase = float(result.get("ats_forecast", {}).get("increase", 0.0))
-            AnalyticsService.track_tailor_used(user_id, data.job_title, data.company, forecast_increase, db)
-        except Exception as e:
-            print(f"Warning: Analytics tailor tracking failed: {e}")
-
     return ResumeTailorResponse(
-
         original_resume=result["original_resume"],
         tailored_resume=result["tailored_resume"],
         job_title=result["job_title"],

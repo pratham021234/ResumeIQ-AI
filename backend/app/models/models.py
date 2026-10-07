@@ -33,8 +33,6 @@ class User(Base):
     payments = relationship("Payment", back_populates="user", cascade="all, delete-orphan")
     usage_trackers = relationship("UsageTracker", back_populates="user", cascade="all, delete-orphan")
     reports = relationship("Report", back_populates="user", cascade="all, delete-orphan")
-    analytics_events = relationship("AnalyticsEvent", back_populates="user", cascade="all, delete-orphan")
-
 
 class Resume(Base):
     __tablename__ = "resumes"
@@ -297,23 +295,3 @@ class Report(Base):
 
     user = relationship("User", back_populates="reports")
     analysis = relationship("Analysis", back_populates="reports")
-
-class AnalyticsEvent(Base):
-    __tablename__ = "analytics_events"
-
-    id = Column(String(36), primary_key=True, default=generate_uuid)
-    event_name = Column(String(100), nullable=False, index=True)
-    category = Column(String(50), nullable=False, index=True)  # acquisition, activation, engagement, revenue
-    user_id = Column(String(36), ForeignKey("users.id"), nullable=True, index=True)
-    anonymous_id = Column(String(100), nullable=True, index=True)
-    session_id = Column(String(100), nullable=True)
-    properties = Column(JSON, nullable=True)
-    url = Column(String(500), nullable=True)
-    referrer = Column(String(500), nullable=True)
-    source = Column(String(100), default="direct", index=True)  # direct, google, linkedin, twitter, etc.
-    ip_hash = Column(String(64), nullable=True)  # SHA-256 pseudonymized hash for GDPR compliance
-    user_agent = Column(String(255), nullable=True)
-    created_at = Column(DateTime, default=utc_now, index=True)
-
-    user = relationship("User", back_populates="analytics_events")
-

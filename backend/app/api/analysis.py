@@ -284,18 +284,9 @@ def run_analysis(
 
     if user_id:
         from app.services.billing_service import BillingService
-        from app.services.analytics_service import AnalyticsService
         BillingService.increment_analysis_usage(str(user_id), db)
-        try:
-            prior_count = db.query(Analysis).filter(Analysis.user_id == user_id).count()
-            if prior_count <= 1:
-                AnalyticsService.track_first_analysis(str(user_id), str(analysis.id), float(analysis.overall_ats_score or 0.0), db)
-            AnalyticsService.track_analysis_created(str(user_id), str(analysis.id), float(analysis.overall_ats_score or 0.0), db)
-        except Exception as e:
-            print(f"Warning: Analytics analysis tracking failed: {e}")
 
     return build_analysis_response(analysis, db)
-
 
 @router.get("", response_model=List[AnalysisOut])
 def list_analyses(

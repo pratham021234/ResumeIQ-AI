@@ -435,26 +435,5 @@ class SimulationActionRequest(BaseModel):
     provider: str = "stripe"
     reason: Optional[str] = "Card declined: Insufficient funds"
 
-# Analytics Schemas
-class AnalyticsEventCreate(BaseModel):
-    event_name: str
-    category: Optional[str] = "engagement" # acquisition, activation, engagement, revenue
-    anonymous_id: Optional[str] = None
-    session_id: Optional[str] = None
-    properties: Optional[Dict[str, Any]] = None
-    url: Optional[str] = None
-    referrer: Optional[str] = None
-
-class AnalyticsEventOut(BaseModel):
-    id: str
-    event_name: str
-    category: str
-    source: Optional[str] = None
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
 
 

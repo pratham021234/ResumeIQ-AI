@@ -26,16 +26,8 @@ def signup(data: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
 
-    # Track signup activation event
-    from app.services.analytics_service import AnalyticsService
-    try:
-        AnalyticsService.track_signup(user_id=str(user.id), plan=user.plan, method="email", db=db)
-    except Exception as e:
-        print(f"Warning: Analytics signup tracking failed: {e}")
-
     token = create_access_token(subject=user.id)
     return Token(access_token=token, user=UserOut.model_validate(user))
-
 
 @router.post("/login", response_model=Token)
 def login(data: UserLogin, db: Session = Depends(get_db)):

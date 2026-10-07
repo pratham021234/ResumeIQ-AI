@@ -4,7 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status
 from sqlalchemy.orm import Session
 from app.api.deps import get_db, get_current_user_optional
-from app.models.models import Resume, ResumeVersion, User
+from app.models.models import Resume, ResumeVersion, User, Analysis, CoverLetter
 from app.schemas.schemas import ResumeOut, ResumeUpdate
 from app.parsers.resume_parser import ResumeParser
 from app.core.config import settings
@@ -87,15 +87,9 @@ async def upload_resume(
 
     if user_id:
         from app.services.billing_service import BillingService
-        from app.services.analytics_service import AnalyticsService
         BillingService.increment_resume_upload(user_id, db)
-        try:
-            AnalyticsService.track_resume_upload(user_id, str(resume.id), str(resume.file_type), int(resume.file_size or 0), db)
-        except Exception as e:
-            print(f"Warning: Analytics resume upload tracking failed: {e}")
 
     return ResumeOut.model_validate(resume)
-
 
 @router.get("", response_model=List[ResumeOut])
 def get_all_resumes(
@@ -203,7 +197,25 @@ def delete_resume(
     resume = db.query(Resume).filter(Resume.id == resume_id).first()
     if not resume:
         raise HTTPException(status_code=404, detail="Resume not found")
-    
-    db.delete(resume)
-    db.commit()
-    return {"status": "success", "message": "Resume deleted successfully"}
+
+    try:
+        # Nullify any cover letter foreign keys
+        db.query(CoverLetter).filter(CoverLetter.resume_id == resume_id).update({"resume_id": None})
+
+        # Remove physical file if on disk
+        if resume.file_path and os.path.exists(resume.file_path):
+            try:
+                os.remove(resume.file_path)
+            except Exception:
+                pass
+
+        # Delete resume (cascades versions and analyses)
+        db.delete(resume)
+        db.commit()
+        return {"status": "success", "message": "Resume deleted successfully", "id": resume_id}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete resume: {str(e)}"
+        )

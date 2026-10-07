@@ -325,13 +325,6 @@ class BillingService:
         db.add(payment)
         db.commit()
 
-        # Track upgrade in Analytics
-        from app.services.analytics_service import AnalyticsService
-        try:
-            AnalyticsService.track_upgrade(str(user.id), plan_id, amount, provider, db)
-        except Exception as e:
-            print(f"Warning: Analytics upgrade tracking failed: {e}")
-
         return {
             "success": True,
             "message": f"Successfully subscribed to {plan.name} Plan.",
@@ -354,14 +347,6 @@ class BillingService:
         if not sub:
             return {"success": False, "message": "No active subscription found to cancel."}
 
-        # Track churn in Analytics
-        from app.services.analytics_service import AnalyticsService
-        try:
-            mrr_lost = 1999.0 if str(user.plan) == "recruiter" else 299.0
-            AnalyticsService.track_churn(str(user.id), str(user.plan), mrr_lost, db)
-        except Exception as e:
-            print(f"Warning: Analytics churn tracking failed: {e}")
-
         if immediate:
             setattr(sub, "status", "canceled")
             setattr(sub, "canceled_at", utc_now())
@@ -374,7 +359,6 @@ class BillingService:
                 "plan": "free",
                 "status": "canceled"
             }
-
         else:
             setattr(sub, "cancel_at_period_end", True)
             setattr(sub, "canceled_at", utc_now())

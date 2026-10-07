@@ -33,8 +33,6 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-import { AnalyticsProvider } from '@/components/analytics/AnalyticsProvider';
-
 export default function RootLayout({
   children,
 }: {
@@ -46,11 +44,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
-        <AnalyticsProvider>
-          {children}
-        </AnalyticsProvider>
+        {children}
       </body>
     </html>
   );
 }
-
