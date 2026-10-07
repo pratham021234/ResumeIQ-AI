@@ -2,11 +2,18 @@
   "include": [
     "."
   ],
+  "exclude": [
+    "**/node_modules",
+    "**/.venv"
+  ],
   "extraPaths": [
     ".",
-    "../.venv/Lib/site-packages",
+    "D:/ResumeIQ AI/backend",
+    "D:/ResumeIQ AI/.venv/Lib/site-packages",
     "C:/Users/sh/AppData/Local/Programs/Python/Python311/Lib/site-packages"
   ],
+  "venvPath": "D:/ResumeIQ AI",
+  "venv": ".venv",
   "pythonVersion": "3.11",
   "pythonPlatform": "Windows"
 }

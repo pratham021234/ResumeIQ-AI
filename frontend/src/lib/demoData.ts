@@ -1,4 +1,4 @@
-import { Analysis, DashboardStats } from '@/types';
+import { Analysis, DashboardStats, ResumeTailorResponse } from '@/types';
 
 export const DEMO_ANALYSIS: Analysis = {
   id: 'demo-analysis-alex-stripe',
@@ -284,3 +284,240 @@ export const DEMO_STATS: DashboardStats = {
     },
   ],
 };
+
+export const TAILOR_PRESETS = [
+  {
+    id: 'stripe-backend',
+    job_title: 'Senior Backend Engineer',
+    company: 'Stripe',
+    job_description: `We are looking for a Senior Backend Engineer to join our Core Payments Infrastructure team.
+You will design, build, and scale high-availability APIs handling billions of dollars in daily transactions.
+
+Requirements:
+- 4+ years of backend engineering experience with Python, FastAPI, Go, or Java.
+- Deep expertise in relational databases, specifically PostgreSQL, query optimization, and schema migrations.
+- Proven experience with distributed systems, Redis caching, Kafka or RabbitMQ event streaming.
+- Solid background in Docker, Kubernetes, CI/CD pipelines, and AWS cloud environments.
+- Strong focus on sub-50ms API latency, fault tolerance, and idempotency.`,
+    sample_resume: `ALEX RIVERA
+San Francisco, CA • alex.rivera@example.com • (555) 234-5678 • linkedin.com/in/alexrivera-dev
+
+PROFESSIONAL SUMMARY
+Software developer with 4 years of experience building web applications and backend systems using Python and relational databases. Experienced in RESTful APIs and cloud deployments.
+
+TECHNICAL SKILLS
+Languages: Python, JavaScript, SQL, HTML/CSS
+Frameworks & Tools: Django, Flask, Express, Docker, Git, Linux
+Databases: MySQL, SQLite, MongoDB
+Cloud: AWS (EC2, S3)
+
+WORK EXPERIENCE
+Backend Software Engineer | CloudScale FinTech (2022 - Present)
+- Developed REST API endpoints for user accounts and recurring transaction billing.
+- Managed database queries and reduced response times by 25% through query refactoring.
+- Handled deployment scripts and assisted with server maintenance on AWS EC2.
+- Collaborated with frontend engineers to integrate payment checkout screens.
+
+Software Engineer | Apex Digital Solutions (2020 - 2022)
+- Built internal dashboard tools using Python and Flask with MySQL databases.
+- Integrated third-party webhook integrations for notification delivery.
+- Wrote unit tests and increased code test coverage from 60% to 82%.
+
+PROJECTS
+High-Throughput Webhook Engine
+- Created a background worker service that parsed transaction JSON payloads and updated ledger balances.
+
+EDUCATION
+B.S. in Computer Science | University of California, Berkeley (2020)`,
+  },
+  {
+    id: 'openai-solutions',
+    job_title: 'AI Solutions Engineer',
+    company: 'OpenAI',
+    job_description: `OpenAI is seeking an AI Solutions Engineer to partner with enterprise customers to build generative AI architectures.
+
+Requirements:
+- Hands-on experience developing LLM pipelines, prompt engineering, and RAG systems using LangChain, LlamaIndex, or Vector DBs (Pinecone, pgvector).
+- Proficiency in Python, TypeScript/Next.js, and RESTful API integration.
+- Ability to evaluate AI model safety, latency, token efficiency, and hallucination reduction.
+- Experience delivering production AI applications with measurable business value.`,
+    sample_resume: `SARAH CHEN
+New York, NY • sarah.chen@example.com • (555) 876-5432 • github.com/sarahchen-ai
+
+PROFESSIONAL SUMMARY
+Full-stack software engineer with 3+ years of experience building modern web applications and integrating machine learning APIs into customer-facing products.
+
+TECHNICAL SKILLS
+Languages: Python, TypeScript, JavaScript
+Frameworks: React, Next.js, Node.js, FastAPI
+AI & Data: OpenAI API, Pandas, Scikit-learn, Vector Embeddings
+Cloud & DB: PostgreSQL, Redis, Vercel, Supabase
+
+WORK EXPERIENCE
+Full Stack Engineer | CogniTech Labs (2023 - Present)
+- Built enterprise search features connecting vector embeddings to existing knowledge bases.
+- Developed Next.js and FastAPI web interfaces for internal AI document summaries.
+- Reduced API inference latency by caching repetitive query results in Redis.
+
+Software Developer | Horizon Media (2021 - 2023)
+- Created content analytics dashboard utilizing NLP classification algorithms.
+- Architected data ingest pipelines processing 50,000 articles daily.
+
+EDUCATION
+B.S. in Computer Science & Data Science | Columbia University (2021)`,
+  },
+  {
+    id: 'vercel-frontend',
+    job_title: 'Senior Frontend Platform Engineer',
+    company: 'Vercel',
+    job_description: `Vercel is looking for a Senior Frontend Platform Engineer to advance our developer experience and web runtime.
+
+Requirements:
+- Deep expertise in Next.js (App Router, Server Components, SSR, ISR) and React 19.
+- Strong mastery of TypeScript, Tailwind CSS, Web Vitals optimization, and micro-frontend architecture.
+- Experience building headless design systems, accessible UI components (ARIA, WCAG 2.1 AA), and bundle optimization.
+- Understanding of edge middleware, streaming SSR, and serverless compute models.`,
+    sample_resume: `JORDAN LEE
+Seattle, WA • jordan.lee@example.com • (555) 345-6789 • jordanlee.io
+
+PROFESSIONAL SUMMARY
+Frontend developer with 5 years experience specializing in React, TypeScript, and modern web application interfaces. Passionate about design systems and web performance.
+
+TECHNICAL SKILLS
+Languages: TypeScript, JavaScript, CSS3, HTML5
+Frameworks: React, Next.js, Redux, Tailwind CSS, Vite
+Tools: Jest, Playwright, Storybook, Webpack, Figma
+Performance: Lighthouse, Core Web Vitals, Bundle Analyzer
+
+WORK EXPERIENCE
+Senior Frontend Developer | Pulse UI (2022 - Present)
+- Led frontend redesign across 12 product modules using Next.js and Tailwind CSS.
+- Improved Core Web Vitals LCP by 45% and reduced main thread blocking time.
+- Created reusable component library used by 18 engineering teams.
+
+Frontend Engineer | DevStack (2019 - 2022)
+- Built interactive developer dashboards with React and TypeScript.
+- Implemented state management and optimized complex data grid rendering performance.
+
+EDUCATION
+B.S. in Software Engineering | University of Washington (2019)`,
+  },
+];
+
+export const DEMO_TAILOR_RESPONSE: ResumeTailorResponse = {
+  original_resume: TAILOR_PRESETS[0].sample_resume,
+  tailored_resume: `ALEX RIVERA
+San Francisco, CA • alex.rivera@example.com • (555) 234-5678 • linkedin.com/in/alexrivera-dev
+
+PROFESSIONAL SUMMARY
+Senior Backend Engineer with 4+ years of experience engineering high-concurrency payment APIs and scalable backend architectures. Specialized in Python, FastAPI, PostgreSQL, and distributed Redis caching systems with a focus on sub-50ms latency and high availability.
+
+TECHNICAL SKILLS
+Core Languages: Python, Go, SQL, JavaScript
+Frameworks & APIs: FastAPI, Django, REST APIs, Microservices, Event-Driven Architecture
+Databases & Cache: PostgreSQL (Query Optimization, Migrations), Redis, MySQL
+Cloud & Infrastructure: Docker, Kubernetes, AWS (EC2, S3, RDS), CI/CD Pipelines, Kafka
+
+WORK EXPERIENCE
+Senior Backend Software Engineer | CloudScale FinTech (2022 - Present)
+- Architected and deployed high-availability REST APIs using FastAPI and PostgreSQL handling $15M+ monthly billing transactions.
+- Implemented distributed Redis caching layer, reducing median API latency by 42% (down to 38ms) and eliminating database connection bottlenecks.
+- Containerized microservices with Docker and automated CI/CD pipeline deployments to AWS cloud environments.
+- Designed idempotent webhook ingestion service processing 10,000+ daily payload events with 99.99% reliability.
+
+Software Engineer | Apex Digital Solutions (2020 - 2022)
+- Engineered scalable backend services using Python, refactoring legacy relational schemas and optimizing complex PostgreSQL queries.
+- Integrated enterprise third-party APIs and webhook delivery pipelines with automated retry and backoff mechanisms.
+- Established automated test suites with PyTest, boosting test coverage from 60% to 88% and cutting regression incidents in half.
+
+PROJECTS
+Distributed Payment Webhook Engine
+- Architected an event-driven webhook processing pipeline with FastAPI and Redis message broker, maintaining sub-45ms response time under peak load.
+- Designed database idempotency keys and transactional integrity safeguards to prevent duplicate ledger postings.
+
+EDUCATION
+B.S. in Computer Science | University of California, Berkeley (2020)`,
+  job_title: 'Senior Backend Engineer',
+  company: 'Stripe',
+  tailored_sections: {
+    summary:
+      'Senior Backend Engineer with 4+ years of experience engineering high-concurrency payment APIs and scalable backend architectures. Specialized in Python, FastAPI, PostgreSQL, and distributed Redis caching systems with a focus on sub-50ms latency and high availability.',
+    skills:
+      'Core Languages: Python, Go, SQL, JavaScript\nFrameworks & APIs: FastAPI, Django, REST APIs, Microservices, Event-Driven Architecture\nDatabases & Cache: PostgreSQL (Query Optimization, Migrations), Redis, MySQL\nCloud & Infrastructure: Docker, Kubernetes, AWS (EC2, S3, RDS), CI/CD Pipelines, Kafka',
+    experience:
+      'Senior Backend Software Engineer | CloudScale FinTech (2022 - Present)\n- Architected and deployed high-availability REST APIs using FastAPI and PostgreSQL handling $15M+ monthly billing transactions.\n- Implemented distributed Redis caching layer, reducing median API latency by 42% (down to 38ms) and eliminating database connection bottlenecks.\n- Containerized microservices with Docker and automated CI/CD pipeline deployments to AWS cloud environments.\n- Designed idempotent webhook ingestion service processing 10,000+ daily payload events with 99.99% reliability.',
+    projects:
+      'Distributed Payment Webhook Engine\n- Architected an event-driven webhook processing pipeline with FastAPI and Redis message broker, maintaining sub-45ms response time under peak load.\n- Designed database idempotency keys and transactional integrity safeguards to prevent duplicate ledger postings.',
+    education: 'B.S. in Computer Science | University of California, Berkeley (2020)',
+  },
+  change_log: [
+    {
+      category: 'Added',
+      item: 'FastAPI Framework Integration',
+      description: 'Integrated FastAPI throughout skills and work history to directly match Stripe API requirements.',
+    },
+    {
+      category: 'Added',
+      item: 'PostgreSQL & Query Optimization',
+      description: 'Explicitly highlighted relational database tuning and schema migration proficiency.',
+    },
+    {
+      category: 'Added',
+      item: 'Redis & Distributed Caching',
+      description: 'Positioned in-memory caching to satisfy sub-50ms latency and high-availability criteria.',
+    },
+    {
+      category: 'Added',
+      item: 'Target Role Headline: Senior Backend Engineer',
+      description: 'Aligned the professional summary headline to match the exact target title at Stripe.',
+    },
+    {
+      category: 'Improved',
+      item: 'Project Descriptions & Latency Metrics',
+      description: 'Elevated webhook project with architecture-level terminology, sub-45ms performance, and idempotency safeguards.',
+    },
+    {
+      category: 'Improved',
+      item: 'Quantified Experience Bullets',
+      description: 'Replaced passive duty verbs with strong engineering action verbs and measured outcomes ($15M+ billing, 42% latency reduction).',
+    },
+    {
+      category: 'Improved',
+      item: 'Categorized Technical Skills Taxonomy',
+      description: 'Organized skills into Core Languages, Frameworks & APIs, Databases & Cache, and Cloud & Infrastructure for superior ATS parsing.',
+    },
+    {
+      category: 'Removed',
+      item: 'Irrelevant Legacy Technologies',
+      description: 'Eliminated SQLite and generic web tags to concentrate resume density on enterprise backend technologies.',
+    },
+    {
+      category: 'Removed',
+      item: 'Passive Phrasing & Fluff',
+      description: 'Removed weak starter phrases like "assisted with", "handled deployment scripts", and "worked on".',
+    },
+    {
+      category: 'Recommended',
+      item: 'Distributed Consensus & Idempotency',
+      description: 'Prepare to discuss distributed ledger consistency and two-phase commits during Stripe system design rounds.',
+    },
+    {
+      category: 'Recommended',
+      item: 'Kafka / Event Streaming Deep Dive',
+      description: 'Emphasize event-driven architecture and asynchronous message queues during recruiter screening.',
+    },
+  ],
+  ats_forecast: {
+    current_score: 71.0,
+    expected_score: 88.0,
+    increase: 17.0,
+    reasoning: [
+      '+8.0 pts: Directly closed 3 primary tech stack keyword gaps (FastAPI, PostgreSQL, Redis) demanded by Stripe.',
+      '+5.0 pts: Transformed 4 passive experience bullets into quantified, action-oriented engineering achievements.',
+      '+2.5 pts: Aligned target summary headline directly with Senior Backend Engineer role specifications.',
+      '+1.5 pts: Streamlined technical skills taxonomy and eliminated non-essential legacy tools for higher ATS parse index.',
+    ],
+  },
+  new_resume_id: 'tailored-stripe-demo',
+};
+

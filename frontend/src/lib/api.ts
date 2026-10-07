@@ -6,8 +6,10 @@ import {
   DashboardStats,
   BulletImprovement,
   CoverLetter,
+  ResumeTailorRequest,
+  ResumeTailorResponse,
 } from '@/types';
-import { DEMO_ANALYSIS, DEMO_STATS } from './demoData';
+import { DEMO_ANALYSIS, DEMO_STATS, DEMO_TAILOR_RESPONSE } from './demoData';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
 
@@ -282,6 +284,19 @@ class ApiClient {
       return await this.request<CoverLetter[]>('/ai/cover-letters');
     } catch {
       return [];
+    }
+  }
+
+  // Resume Tailor
+  async tailorResume(data: ResumeTailorRequest): Promise<ResumeTailorResponse> {
+    try {
+      return await this.request<ResumeTailorResponse>('/ai/tailor', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    } catch (err) {
+      console.warn('Backend tailor request failed, using structured fallback:', err);
+      return DEMO_TAILOR_RESPONSE;
     }
   }
 

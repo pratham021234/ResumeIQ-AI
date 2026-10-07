@@ -233,3 +233,34 @@ class ReportOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Resume Tailor Schemas
+class TailorChangeItem(BaseModel):
+    category: str # "Added", "Improved", "Removed", "Recommended"
+    item: str
+    description: Optional[str] = None
+
+class ATSForecast(BaseModel):
+    current_score: float
+    expected_score: float
+    increase: float
+    reasoning: List[str]
+
+class ResumeTailorRequest(BaseModel):
+    resume_id: Optional[str] = None
+    resume_text: Optional[str] = None
+    job_id: Optional[str] = None
+    job_title: str
+    company: str
+    job_description: str
+
+class ResumeTailorResponse(BaseModel):
+    original_resume: str
+    tailored_resume: str
+    job_title: str
+    company: str
+    tailored_sections: Dict[str, str]
+    change_log: List[TailorChangeItem]
+    ats_forecast: ATSForecast
+    new_resume_id: Optional[str] = None
+

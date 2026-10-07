@@ -9,6 +9,7 @@ import {
   FileText,
   Plus,
   Sparkles,
+  Wand2,
   PenTool,
   Copy,
   Trash2,
@@ -144,6 +145,13 @@ export default function ResumeLibraryPage() {
               {/* Actions */}
               <div className="pt-4 mt-4 flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1">
+                  <Link
+                    href={`/tailor?resume_id=${resume.id}`}
+                    className="p-2 rounded-lg text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
+                    title="AI Tailor for specific Job Description"
+                  >
+                    <Wand2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  </Link>
                   <Link
                     href={`/analyze?resume_id=${resume.id}`}
                     className="p-2 rounded-lg text-xs font-semibold bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-200 transition-colors"

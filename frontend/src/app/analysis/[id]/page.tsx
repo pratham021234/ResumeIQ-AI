@@ -95,6 +95,14 @@ function AnalysisContent() {
 
           {/* Quick Action Buttons */}
           <div className="flex flex-wrap items-center gap-2.5">
+            <Link
+              href={`/tailor?resume_id=${analysis.resume_id || ''}&job_title=${encodeURIComponent(analysis.job_title || '')}&company=${encodeURIComponent(analysis.company_name || '')}`}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-500 transition-colors shadow-xs"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>AI Tailor for this Job</span>
+            </Link>
+
             <button
               onClick={handleDownloadPDF}
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors shadow-xs"

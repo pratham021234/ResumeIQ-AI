@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Sparkles,
+  Wand2,
   FileText,
   FileCheck2,
   Mail,
@@ -21,7 +22,8 @@ import { api } from '@/lib/api';
 
 const navigationItems = [
   { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Analyze Resume', href: '/analyze', icon: Sparkles, badge: 'New' },
+  { name: 'Analyze Resume', href: '/analyze', icon: Sparkles },
+  { name: 'AI Resume Tailor', href: '/tailor', icon: Wand2, badge: 'PRO' },
   { name: 'My Resumes', href: '/resumes', icon: FileText },
   { name: 'Bullet Improver', href: '/editor', icon: PenTool },
   { name: 'Cover Letters', href: '/cover-letter', icon: Mail },

@@ -168,3 +168,37 @@ export interface CoverLetter {
   length: string;
   created_at?: string;
 }
+
+export interface TailorChangeItem {
+  category: 'Added' | 'Improved' | 'Removed' | 'Recommended' | string;
+  item: string;
+  description?: string;
+}
+
+export interface ATSForecast {
+  current_score: number;
+  expected_score: number;
+  increase: number;
+  reasoning: string[];
+}
+
+export interface ResumeTailorRequest {
+  resume_id?: string;
+  resume_text?: string;
+  job_id?: string;
+  job_title: string;
+  company: string;
+  job_description: string;
+}
+
+export interface ResumeTailorResponse {
+  original_resume: string;
+  tailored_resume: string;
+  job_title: string;
+  company: string;
+  tailored_sections: Record<string, string>;
+  change_log: TailorChangeItem[];
+  ats_forecast: ATSForecast;
+  new_resume_id?: string;
+}
+
