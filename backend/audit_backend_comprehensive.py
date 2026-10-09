@@ -125,6 +125,7 @@ except Exception as e:
 # SECTION 3: RESUME PARSING INTEGRITY
 # ------------------------------------------------------------------
 print("\n[SECTION 3: Resume Parsing & Section Extraction]")
+parsed = {}
 try:
     sample_raw_text = """
     ALEX RIVERA
@@ -271,11 +272,11 @@ try:
         BillingService.increment_analysis_usage(test_uid, db)
     
     can_analyze_3, reason_3 = BillingService.check_can_analyze(test_user, db)
-    clean_reason = str(reason_3 or "").encode("ascii", "ignore").decode("ascii")
+    clean_reason = (reason_3 or "").encode("ascii", "ignore").decode("ascii")
     log_test("Free Plan: 3/3 Limit Reached", not can_analyze_3, f"Blocked as expected: '{clean_reason}'")
 
     # Upgrade user to pro
-    test_user.plan = "pro"
+    setattr(test_user, "plan", "pro")
     db.commit()
     can_analyze_pro, _ = BillingService.check_can_analyze(test_user, db)
     log_test("Pro Plan: Unlimited Usage", can_analyze_pro, "Allowed unlimited analyses after upgrade to Pro")

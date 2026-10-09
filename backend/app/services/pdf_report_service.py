@@ -9,6 +9,10 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 
+def create_table_style(commands: Any) -> TableStyle:
+    """Helper to instantiate TableStyle without reportlab-stubs type inference union mismatches."""
+    return TableStyle(commands)
+
 class PDFReportService:
     @staticmethod
     def generate_analysis_pdf(analysis_data: Dict[str, Any], output_path: str) -> str:
@@ -73,7 +77,7 @@ class PDFReportService:
             ]
         ]
         header_table = Table(header_data, colWidths=[5.0*inch, 2.2*inch])
-        header_table.setStyle(TableStyle([
+        header_table.setStyle(create_table_style([
             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
             ('ALIGN', (1,0), (1,0), 'RIGHT'),
         ]))
@@ -94,7 +98,7 @@ class PDFReportService:
             ]
         ]
         meta_table = Table(meta_data, colWidths=[2.4*inch, 2.5*inch, 2.3*inch])
-        meta_table.setStyle(TableStyle([
+        meta_table.setStyle(create_table_style([
             ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#f8fafc")),
             ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#e2e8f0")),
             ('PADDING', (0,0), (-1,-1), 8),
@@ -124,7 +128,7 @@ class PDFReportService:
             ]
         ]
         scores_table = Table(scores_data, colWidths=[1.8*inch, 1.8*inch, 1.8*inch, 1.8*inch])
-        scores_table.setStyle(TableStyle([
+        scores_table.setStyle(create_table_style([
             ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#f1f5f9")),
             ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#cbd5e1")),
             ('ALIGN', (0,0), (-1,-1), 'CENTER'),
@@ -162,7 +166,7 @@ class PDFReportService:
             ]
         ]
         kw_table = Table(kw_rows, colWidths=[1.8*inch, 5.4*inch])
-        kw_table.setStyle(TableStyle([
+        kw_table.setStyle(create_table_style([
             ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#e2e8f0")),
             ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#f1f5f9")),
             ('PADDING', (0,0), (-1,-1), 6),
@@ -190,7 +194,7 @@ class PDFReportService:
                     Paragraph(f"<b>{iss['title']}</b>: {iss.get('recommendation') or iss['description']}", body_style)
                 ])
             audit_table = Table(audit_rows, colWidths=[1.8*inch, 1.1*inch, 4.3*inch])
-            audit_table.setStyle(TableStyle([
+            audit_table.setStyle(create_table_style([
                 ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f8fafc")),
                 ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#e2e8f0")),
                 ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#f1f5f9")),
@@ -319,7 +323,7 @@ class PDFReportService:
 
         col_widths = [0.6*inch, 2.0*inch, 0.8*inch, 0.7*inch, 1.7*inch, 1.4*inch]
         leaderboard_table = Table(rows, colWidths=col_widths)
-        leaderboard_table.setStyle(TableStyle([
+        leaderboard_table.setStyle(create_table_style([
             ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#f1f5f9")),
             ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#cbd5e1")),
             ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#e2e8f0")),

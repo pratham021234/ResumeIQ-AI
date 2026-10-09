@@ -1,4 +1,0 @@
-John Doe
-john@example.com
-Python, FastAPI, Docker, Kubernetes
-Backend Engineer with 5 years experience

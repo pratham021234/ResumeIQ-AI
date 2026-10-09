@@ -78,7 +78,10 @@ class Settings(BaseModel):
     ENCRYPTION_KEY: Optional[str] = os.getenv("ENCRYPTION_KEY", None)
     NEXTAUTH_SECRET: Optional[str] = os.getenv("NEXTAUTH_SECRET", None)
     NEXTAUTH_URL: Optional[str] = os.getenv("NEXTAUTH_URL", None)
+    GOOGLE_CLIENT_ID: Optional[str] = os.getenv("GOOGLE_CLIENT_ID", None)
+    GOOGLE_CLIENT_SECRET: Optional[str] = os.getenv("GOOGLE_CLIENT_SECRET", None)
     RATE_LIMIT_PER_MINUTE: int = int(os.getenv("RATE_LIMIT_PER_MINUTE", "60"))
+
 
     # AI Integration (Google Gemini)
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
@@ -114,14 +117,16 @@ class Settings(BaseModel):
     SENTRY_ENVIRONMENT: Optional[str] = os.getenv("SENTRY_ENVIRONMENT", None)
     SENTRY_TRACES_SAMPLE_RATE: float = float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.1"))
 
-    # Transactional Email (SMTP)
+    # Transactional Email (SMTP & Resend)
     SMTP_HOST: Optional[str] = os.getenv("SMTP_HOST", None)
     SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))
     SMTP_USER: Optional[str] = os.getenv("SMTP_USER", None)
     SMTP_PASSWORD: Optional[str] = os.getenv("SMTP_PASSWORD", None)
+    RESEND_API_KEY: Optional[str] = os.getenv("RESEND_API_KEY", None)
     EMAIL_FROM: str = os.getenv("EMAIL_FROM", "ResumeIQ AI <noreply@resumeiq.ai>")
     SMTP_TLS: bool = os.getenv("SMTP_TLS", "true").lower() in ("true", "1", "yes")
     SMTP_SSL: bool = os.getenv("SMTP_SSL", "false").lower() in ("true", "1", "yes")
+
 
     # Frontend API
     NEXT_PUBLIC_API_URL: str = os.getenv("NEXT_PUBLIC_API_URL", "http://127.0.0.1:8000/api")
