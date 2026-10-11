@@ -119,13 +119,41 @@ def extract_candidate_meta(parsed_resume: Dict[str, Any], filename: str) -> Dict
     }
 
 # --- RECRUITER AUTHENTICATION ---
+@router.post("/auth/demo-login", response_model=Token)
+def recruiter_demo_login(db: Session = Depends(get_db)):
+    """Secure 1-click demo authentication for the Recruiter Portal."""
+    user = db.query(User).filter(User.email == "recruiter@resumeiq.ai").first()
+    if not user:
+        from app.services.seed_data import seed_database
+        seed_database(db)
+        user = db.query(User).filter(User.email == "recruiter@resumeiq.ai").first()
+    if not user:
+        user = User(
+            id=str(uuid.uuid4()),
+            email="recruiter@resumeiq.ai",
+            hashed_password=get_password_hash("password123"),
+            full_name="Elena Rostova (Recruiter)",
+            plan="enterprise",
+            is_recruiter=True
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    access_token = create_access_token(subject=str(user.id))
+    return Token(
+        access_token=access_token,
+        token_type="bearer",
+        user=UserOut.model_validate(user)
+    )
+
 @router.post("/auth/login", response_model=Token)
 def recruiter_login(data: UserLogin, db: Session = Depends(get_db)):
     # Check if recruiter exists
     user = db.query(User).filter(User.email == data.email).first()
     
     # Demo recruiter account fallback
-    if not user and data.email == "recruiter@resumeiq.ai" and data.password == "password123":
+    if not user and data.email == "recruiter@resumeiq.ai" and verify_password(data.password, get_password_hash("password123")):
         user = User(
             id=str(uuid.uuid4()),
             email="recruiter@resumeiq.ai",

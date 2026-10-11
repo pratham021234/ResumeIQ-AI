@@ -14,7 +14,7 @@ from app.services.pdf_report_service import PDFReportService
 from app.services.billing_service import BillingService
 
 SAMPLE_RESUME_TEXT = """ALEX RIVERA
-San Francisco, CA • alex.rivera.dev@gmail.com • (415) 890-2341 • linkedin.com/in/alexrivera-dev • github.com/alexrivera
+San Francisco, CA • alex.rivera@example.com • (415) 890-2341 • linkedin.com/in/alexrivera-dev • github.com/alexrivera
 
 PROFESSIONAL SUMMARY
 Senior Backend & Systems Engineer with 6+ years of experience building high-throughput microservices, scalable distributed architectures, and developer platforms. Proven expertise in Python, FastAPI, PostgreSQL, and AWS with a track record of driving 99.99% system availability and optimizing API latency for 5M+ daily requests.
@@ -513,7 +513,7 @@ def seed_database(db: Session):
             f"by 42% and enhanced deployment velocity 4-fold.\n\n"
             f"Stripe's engineering culture and dedication to rock-solid infrastructure reliability deeply resonate with my technical values. "
             f"I would welcome the opportunity to discuss how my background in distributed systems and API performance can benefit your team.\n\n"
-            f"Sincerely,\nAlex Rivera\n(415) 890-2341 • alex.rivera.dev@gmail.com"
+            f"Sincerely,\nAlex Rivera\n(415) 890-2341 • alex.rivera@example.com"
         ),
         tone="Professional",
         length="Standard"

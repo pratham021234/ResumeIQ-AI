@@ -329,6 +329,33 @@ class ApiClient {
   }
 
   // --- RECRUITER PORTAL API ---
+  async recruiterDemoLogin(): Promise<{ access_token: string; user: User }> {
+    try {
+      const res = await this.request<{ access_token: string; user: User }>('/recruiter/auth/demo-login', {
+        method: 'POST',
+      });
+      this.setToken(res.access_token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('resumeiq_user', JSON.stringify(res.user));
+      }
+      return res;
+    } catch {
+      const demoRecruiter: User = {
+        id: 'recruiter-demo-elena',
+        email: 'recruiter@resumeiq.ai',
+        full_name: 'Elena Rostova (Recruiter)',
+        plan: 'enterprise',
+        is_recruiter: true,
+        created_at: new Date().toISOString(),
+      };
+      this.setToken('demo-recruiter-token');
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('resumeiq_user', JSON.stringify(demoRecruiter));
+      }
+      return { access_token: 'demo-recruiter-token', user: demoRecruiter };
+    }
+  }
+
   async recruiterLogin(data: { email: string; password: string }): Promise<{ access_token: string; user: User }> {
     const res = await this.request<{ access_token: string; user: User }>('/recruiter/auth/login', {
       method: 'POST',

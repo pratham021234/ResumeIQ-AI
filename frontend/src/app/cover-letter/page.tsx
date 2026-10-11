@@ -25,7 +25,7 @@ Stripe's engineering rigor and commitment to developer velocity deeply align wit
 
 Sincerely,
 Alex Rivera
-(415) 890-2341 • alex.rivera.dev@gmail.com`;
+(415) 890-2341 • alex.rivera@example.com`;
 
 export default function CoverLetterPage() {
   const [jobTitle, setJobTitle] = useState('Senior Backend Engineer');

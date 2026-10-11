@@ -113,7 +113,7 @@ export const BulkScreeningView: React.FC<BulkScreeningViewProps> = ({
     const demo1 = new File(
       [
         `ALEX RIVERA
-alex.rivera@techmail.io • (415) 890-2341 • UC Berkeley
+alex.rivera@example.com • (415) 890-2341 • UC Berkeley
 Senior Backend Engineer with 6 years experience in Python, FastAPI, PostgreSQL, Redis, and Kubernetes.
 Built microservices handling 5M daily requests with sub-45ms p99 latency. Migrated legacy stack to AWS ECS.`,
       ],
@@ -124,7 +124,7 @@ Built microservices handling 5M daily requests with sub-45ms p99 latency. Migrat
     const demo2 = new File(
       [
         `JORDAN LEE
-jordan.lee@domain.com • (206) 555-0192 • Univ of Washington
+jordan.lee@example.com • (206) 555-0192 • Univ of Washington
 Backend Engineer with 5 years building scalable web APIs with Go, Python, PostgreSQL, and Docker.
 Containerized microservices and tuned database indexes for 35% speedup.`,
       ],
@@ -135,7 +135,7 @@ Containerized microservices and tuned database indexes for 35% speedup.`,
     const demo3 = new File(
       [
         `SARAH CHEN
-sarah.chen@innovate.org • (917) 555-4412 • Columbia University
+sarah.chen@example.com • (917) 555-4412 • Columbia University
 Full Stack Developer with 4 years experience with Python, Django, REST APIs, and MySQL.
 Maintained customer billing APIs handling 50k transactions weekly.`,
       ],

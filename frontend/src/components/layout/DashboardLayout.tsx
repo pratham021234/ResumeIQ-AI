@@ -96,7 +96,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
                   Alex Rivera
                 </span>
                 <span className="text-[10px] text-zinc-500 leading-tight">
-                  alex.rivera.dev@gmail.com
+                  alex.rivera@example.com
                 </span>
               </div>
             </Link>

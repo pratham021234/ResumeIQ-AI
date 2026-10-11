@@ -16,7 +16,7 @@ import {
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<'profile' | 'api' | 'billing' | 'preferences'>('profile');
   const [fullName, setFullName] = useState('Alex Rivera');
-  const [email, setEmail] = useState('alex.rivera.dev@gmail.com');
+  const [email, setEmail] = useState('alex.rivera@example.com');
   const [targetIndustry, setTargetIndustry] = useState('FinTech & Cloud Infrastructure');
   const [geminiKey, setGeminiKey] = useState('');
   const [strictness, setStrictness] = useState('standard');

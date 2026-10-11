@@ -10,7 +10,6 @@ import {
   Sparkles,
   ArrowRight,
   AlertCircle,
-  Briefcase,
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { User as UserType } from '@/types';
@@ -39,52 +38,42 @@ export const RecruiterAuthModal: React.FC<RecruiterAuthModalProps> = ({
   const handleLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError(null);
+
+    const loginEmail = email.trim();
+    const loginPassword = password;
+
+    if (!loginEmail || !loginPassword) {
+      setError('Please provide both your work email and password.');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const loginEmail = email.trim() || 'recruiter@resumeiq.ai';
-      const loginPassword = password || 'password123';
-
       const res = await api.recruiterLogin({
         email: loginEmail,
         password: loginPassword,
       });
 
       onSuccess(res.user);
-    } catch (err: any) {
-      setError(err?.message || 'Failed to authenticate recruiter.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to authenticate recruiter.';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDemoLogin = async () => {
-    setEmail('recruiter@resumeiq.ai');
-    setPassword('password123');
     setError(null);
     setIsLoading(true);
 
     try {
-      const res = await api.recruiterLogin({
-        email: 'recruiter@resumeiq.ai',
-        password: 'password123',
-      });
+      const res = await api.recruiterDemoLogin();
       onSuccess(res.user);
-    } catch (err: any) {
-      // Fallback demo user if network error
-      const demoRecruiter: UserType = {
-        id: 'recruiter-demo-elena',
-        email: 'recruiter@resumeiq.ai',
-        full_name: 'Elena Rostova (Recruiter)',
-        plan: 'enterprise',
-        is_recruiter: true,
-        created_at: new Date().toISOString(),
-      };
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('resumeiq_token', 'demo-recruiter-token');
-        localStorage.setItem('resumeiq_user', JSON.stringify(demoRecruiter));
-      }
-      onSuccess(demoRecruiter);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to authenticate demo recruiter.';
+      setError(message);
     } finally {
       setIsLoading(false);
     }

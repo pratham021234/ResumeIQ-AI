@@ -87,7 +87,7 @@ export default function LoginPage() {
                 <label className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                   Password
                 </label>
-                <span className="text-[11px] text-zinc-400">Default: password123</span>
+                <span className="text-[11px] text-zinc-400">Or use 1-Click Demo Login</span>
               </div>
               <input
                 type="password"

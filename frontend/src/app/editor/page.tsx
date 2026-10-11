@@ -18,7 +18,7 @@ import { api } from '@/lib/api';
 import { BulletImprovement } from '@/types';
 
 const INITIAL_RESUME_TEXT = `ALEX RIVERA
-San Francisco, CA • alex.rivera.dev@gmail.com • (415) 890-2341
+San Francisco, CA • alex.rivera@example.com • (415) 890-2341
 
 PROFESSIONAL SUMMARY
 Senior Backend Engineer with 6+ years building microservices and distributed APIs. Specialized in Python, FastAPI, and PostgreSQL.
